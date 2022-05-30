@@ -241,7 +241,9 @@ a {
   top: 430px;
 }
 
-.home-button__home--active {
+.home-button__home--active,
+.work-button__work--active
+{
   width: 60px;
   height: 29px;
   font-family: "Inter";
@@ -255,19 +257,6 @@ a {
   flex-grow: 0;
 }
 
-.work-button__work--active {
-  width: 60px;
-  height: 29px;
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 29px;
-  color: rgba(255, 255, 255, 0.5);
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
 
 .home-button__home--active:hover {
   box-sizing: border-box;
@@ -295,3 +284,4 @@ a {
   order: 0;
   flex-grow: 0;
   color: #F998EF;
+}
