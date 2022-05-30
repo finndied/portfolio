@@ -227,21 +227,21 @@ a {
   line-height: 140%;
 }
 
-.home-work a {
+.home-button a {
   text-decoration: none;
   position: absolute;
   left: 1030px;
   top: 330px;
 }
 
-.home-work2 a {
+.work-button a {
   text-decoration: none;
   position: absolute;
   left: 1033px;
   top: 430px;
 }
 
-.home-work__home--active {
+.home-button__home--active {
   width: 60px;
   height: 29px;
   font-family: "Inter";
@@ -255,7 +255,7 @@ a {
   flex-grow: 0;
 }
 
-.home-work__work--active {
+.work-button__work--active {
   width: 60px;
   height: 29px;
   font-family: "Inter";
@@ -269,7 +269,7 @@ a {
   flex-grow: 0;
 }
 
-.home-work__home--active:hover {
+.home-button__home--active:hover {
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -283,7 +283,7 @@ a {
   color: #F998EF;
 }
 
-.home-work__work--active:hover {
+.work-button__work--active:hover {
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -295,4 +295,3 @@ a {
   order: 0;
   flex-grow: 0;
   color: #F998EF;
-  
