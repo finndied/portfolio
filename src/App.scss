@@ -22,6 +22,7 @@ body {
     padding: 0;
     height: 100vh;
     overflow: auto;
+    overflow-x: hidden;
 }
 
 .app-container.page-view {
@@ -615,4 +616,129 @@ h4 {
         width: 95vw;
         height: 90vh;
     }
+}
+
+/* =========================
+   MOBILE ADAPTATION
+========================= */
+
+@media (max-width: 768px) {
+
+    .app-container {
+        padding: 0 16px;
+    }
+
+    .main-title {
+        font-size: 34px;
+        letter-spacing: 2px;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .header-nav {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .header-nav .nav-btn {
+        width: 100%;
+        font-size: 15px;
+        padding: 10px 18px;
+    }
+
+    .about-card {
+        padding: 18px;
+        text-align: left;
+    }
+
+    .about-card p {
+        font-size: 15px;
+    }
+
+    .works-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .work-card {
+        min-height: 180px;
+        padding: 20px;
+    }
+
+    .work-card h3 {
+        font-size: 16px;
+    }
+
+    .work-card .icon-placeholder {
+        width: 70px;
+        height: 70px;
+    }
+
+    .vector-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .vector-card .vector-img-wrapper {
+        height: 140px;
+    }
+
+    .modal-content {
+        padding: 25px 20px;
+        max-width: 90%;
+    }
+
+    .circle-contact-btn {
+        width: 70px;
+        height: 70px;
+    }
+
+    .scroll-next-arrow {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 1024px) {
+
+    .app-container {
+        padding: 0 24px;
+    }
+
+    .main-title {
+        font-size: 48px;
+    }
+
+    .works-grid {
+        max-width: 100%;
+    }
+
+    .vector-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+  .snap-container {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .snap-section {
+    height: auto;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .nav-arrow {
+    margin-top: 170px;
+  }
+
+  .image-modal-wrapper {
+    max-height: 70vh;
+  }
 }
