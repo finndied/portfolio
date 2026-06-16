@@ -52,7 +52,7 @@ function App() {
   const [selectedCreativeIndex, setSelectedCreativeIndex] = useState(null);
 
   const videoWorks = [
-    { id: 3, file: video03, title: 'Видео для авикомпании S7' },
+    { id: 3, file: video03, title: 'Видео для авиакомпании S7' },
     { id: 1, file: video01, title: 'Устройство электросамоката' },
     { id: 2, file: video02, title: 'Видео для автоюриста' }
   ];
