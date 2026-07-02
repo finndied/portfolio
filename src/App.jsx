@@ -36,6 +36,7 @@ import video03 from './assets/video/video03.mp4';
 import imgS7 from './assets/creative/s7.png';
 import imgS7_2 from './assets/creative/s7_2.png';
 import imgPortal from './assets/creative/portal.jpg';
+import imgEmailKuper from './assets/creative/EmailKuper.png';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('main');
@@ -46,7 +47,8 @@ function App() {
   const creativeWorks = [
     { id: 1, img: imgS7, title: 'Рекламный баннер S7 — Вариант 1' },
     { id: 2, img: imgS7_2, title: 'Рекламный баннер S7 — Вариант 2' },
-    { id: 3, img: imgPortal, title: 'Креатив для компании Portal' }
+    { id: 3, img: imgPortal, title: 'Креатив для компании Portal' },
+    { id: 4, img: imgEmailKuper, title: 'Email-рассылка Купер' }
   ];
 
   const [selectedCreativeIndex, setSelectedCreativeIndex] = useState(null);
