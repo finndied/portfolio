@@ -32,6 +32,7 @@ import img9 from './assets/vector/09.jpg';
 import video01 from './assets/video/video01.mp4';
 import video02 from './assets/video/video02.mp4';
 import video03 from './assets/video/video03.mp4';
+import video04 from './assets/video/video04.mp4';
 
 import imgS7 from './assets/creative/s7.png';
 import imgS7_2 from './assets/creative/s7_2.png';
@@ -54,6 +55,7 @@ function App() {
   const [selectedCreativeIndex, setSelectedCreativeIndex] = useState(null);
 
   const videoWorks = [
+    { id: 4, file: video04, title: 'Промо-ролик для Siberian Wellness' },
     { id: 3, file: video03, title: 'Видео для авиакомпании S7' },
     { id: 1, file: video01, title: 'Устройство электросамоката' },
     { id: 2, file: video02, title: 'Видео для автоюриста' }
