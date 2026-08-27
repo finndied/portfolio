@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.scss';
 
 // Импорт изображений шапки и меню
-import headerImage from './assets/header-bg.png';
+import headerImage from './assets/header-bg.webp';
 import aboutBg from './assets/about-bg.png';
 import oneImg from './assets/one.png';
 import twoImg from './assets/two.png';
@@ -496,7 +496,7 @@ function App() {
             {videoWorks.map((work, index) => (
               <div key={work.id} className="vector-card doc-card aero-card" onClick={() => setSelectedVideoIndex(index)}>
                 <div className="vector-img-wrapper">
-                  <video src={work.file} className="video-preview" muted loop preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} />
+                  <video src={work.file} className="video-preview" muted loop preload="none" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} />
                   <div className="play-button-overlay"></div>
                 </div>
                 <span className="doc-card-title" style={{ marginTop: '15px' }}>{work.title}</span>

@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
 @font-face {
-    font-family: 'Nunito';
-    src: url('./assets/fonts/Nunito-Regular.woff2') format('woff2'),
-        url('./assets/fonts/Nunito-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'Nunito';
+  src: url('./fonts/Nunito-Regular.woff2') format('woff2');
+  font-display: swap; /* Позволяет показывать системный шрифт, пока грузится ваш */
 }
 
 * {

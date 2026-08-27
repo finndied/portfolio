@@ -1,12 +1,3 @@
-// Подключаем кастомный шрифт (файл Guidy-Regular.woff2/ttf нужно положить в src/assets/fonts/)
-@font-face {
-  font-family: 'Guidy';
-  src: url('./assets/fonts/Guidy-Regular.woff2') format('woff2'),
-       url('./assets/fonts/Guidy.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
