@@ -47,11 +47,135 @@ import imgS7_2 from './assets/creative/s7_2.png';
 import imgPortal from './assets/creative/portal.jpg';
 import imgEmailKuper from './assets/creative/EmailKuper.png';
 
+// --- КОМПОНЕНТ КАРТИНКИ С ЗУМОМ ПО КЛИКУ ---
+const ZoomableImage = ({ src, alt, zoomScale = 3 }) => {
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [transformOrigin, setTransformOrigin] = useState('50% 50%');
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const startPosRef = useRef({ x: 0, y: 0 });
+  const hasDraggedRef = useRef(false);
+
+  // Сброс состояния при смене картинки
+  useEffect(() => {
+    setIsZoomed(false);
+    setTransformOrigin('50% 50%');
+    setTranslate({ x: 0, y: 0 });
+    setIsDragging(false);
+  }, [src]);
+
+  // Зажатие ЛКМ
+  const handleMouseDown = (e) => {
+    e.stopPropagation();
+    if (e.button !== 0) return; // Реакция только на ЛКМ
+
+    if (isZoomed) {
+      setIsDragging(true);
+      hasDraggedRef.current = false;
+      startPosRef.current = {
+        x: e.clientX - translate.x,
+        y: e.clientY - translate.y,
+      };
+    }
+  };
+
+  // Перетаскивание
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+
+      const dx = Math.abs(e.clientX - (startPosRef.current.x + translate.x));
+      const dy = Math.abs(e.clientY - (startPosRef.current.y + translate.y));
+
+      // Если сдвиг больше 5px — фиксируем движение (драг)
+      if (dx > 5 || dy > 5) {
+        hasDraggedRef.current = true;
+      }
+
+      if (hasDraggedRef.current) {
+        setTranslate({
+          x: e.clientX - startPosRef.current.x,
+          y: e.clientY - startPosRef.current.y,
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
+      }
+    };
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, translate]);
+
+  // Обработка одиночного клика ЛКМ
+  const handleClick = (e) => {
+    e.stopPropagation();
+
+    // Если картинку перетаскивали — не сбрасываем зум
+    if (hasDraggedRef.current) {
+      hasDraggedRef.current = false;
+      return;
+    }
+
+    if (isZoomed) {
+      // Повторный клик: возвращаем в обычное состояние
+      setIsZoomed(false);
+      setTranslate({ x: 0, y: 0 });
+    } else {
+      // Первый клик: приближаем в точку клика
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+      setTransformOrigin(`${x}% ${y}%`);
+      setTranslate({ x: 0, y: 0 });
+      setIsZoomed(true);
+    }
+  };
+
+  const getCursor = () => {
+    if (!isZoomed) return 'zoom-in';
+    return isDragging ? 'grabbing' : 'zoom-out';
+  };
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      onDragStart={(e) => e.preventDefault()}
+      style={{
+        cursor: getCursor(),
+        transform: isZoomed
+          ? `translate(${translate.x}px, ${translate.y}px) scale(${zoomScale})`
+          : 'translate(0px, 0px) scale(1)',
+        transformOrigin: transformOrigin,
+        transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+        maxHeight: '85vh',
+        maxWidth: '90vw',
+        objectFit: 'contain',
+        userSelect: 'none',
+      }}
+    />
+  );
+};
+
 // --- КОМПОНЕНТ ПЛЕЕРА НА ВЕРХНЕМ УРОВНЕ ---
 export const Player = ({ defaultImage = oneImg, scrollToSection }) => {
   const [currentImg, setCurrentImg] = useState(defaultImage);
 
-  // Синхронизация: при переходе на новую секцию ставим дефолтную картинку
   useEffect(() => {
     setCurrentImg(defaultImage);
   }, [defaultImage]);
@@ -60,27 +184,27 @@ export const Player = ({ defaultImage = oneImg, scrollToSection }) => {
     <div className="player-container">
       <img src={currentImg} className="player-img" alt="Player Menu" />
 
-      <div 
-        className="player-click-zone zone-1" 
-        onMouseEnter={() => setCurrentImg(oneImg)} 
+      <div
+        className="player-click-zone zone-1"
+        onMouseEnter={() => setCurrentImg(oneImg)}
         onClick={() => scrollToSection && scrollToSection('creative-section')}
         title="Рекламные креативы"
       />
-      <div 
-        className="player-click-zone zone-2" 
-        onMouseEnter={() => setCurrentImg(twoImg)} 
+      <div
+        className="player-click-zone zone-2"
+        onMouseEnter={() => setCurrentImg(twoImg)}
         onClick={() => scrollToSection && scrollToSection('video-section')}
         title="Видеомонтаж"
       />
-      <div 
-        className="player-click-zone zone-3" 
-        onMouseEnter={() => setCurrentImg(threeImg)} 
+      <div
+        className="player-click-zone zone-3"
+        onMouseEnter={() => setCurrentImg(threeImg)}
         onClick={() => scrollToSection && scrollToSection('vector-section')}
         title="Векторная графика"
       />
-      <div 
-        className="player-click-zone zone-4" 
-        onMouseEnter={() => setCurrentImg(fourImg)} 
+      <div
+        className="player-click-zone zone-4"
+        onMouseEnter={() => setCurrentImg(fourImg)}
         onClick={() => scrollToSection && scrollToSection('copywrite-section')}
         title="Копирайтинг"
       />
@@ -96,6 +220,7 @@ function App() {
   const [selectedVideoIndex, setSelectedVideoIndex] = useState(null);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
 
   const containerRef = useRef(null);
   const currentSectionRef = useRef(0);
@@ -118,7 +243,7 @@ function App() {
       img: imgAuraCover,
       file: pdfAura,
       isPdf: true,
-      title: 'Пзентация Клубного дома Aura'
+      title: 'Презентация Клубного дома Aura'
     },
   ];
 
@@ -176,6 +301,16 @@ function App() {
     if (e) e.stopPropagation();
     setSelectedImageIndex((prev) => (prev === vectorWorks.length - 1 ? 0 : prev + 1));
   };
+
+  // Parallax эффект: отслеживание скролла
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -288,6 +423,18 @@ function App() {
     if (activeSectionIndex >= 4) return 2;
     if (activeSectionIndex >= 2) return 1;
     return 0;
+  };
+
+  const getParallaxOffset = (sectionId, speed = 0.3) => {
+    const section = document.getElementById(sectionId);
+    if (!section) return 0;
+
+    const rect = section.getBoundingClientRect();
+    const sectionCenter = rect.top + rect.height / 2;
+    const viewportCenter = window.innerHeight / 2;
+    const offset = (viewportCenter - sectionCenter) * speed;
+
+    return offset;
   };
 
   const activeBubbleNum = getActiveBubble();
@@ -411,9 +558,19 @@ function App() {
       {/* СЕКЦИЯ 3: МЕНЮ 1 — КРЕАТИВЫ */}
       <section className="snap-section hero-section" id="menu-creative-section">
         <img src={allBg} alt="Фон" className="hero-background-img" />
-        <img src={decor1Right} alt="" className="menu-decor decor-bottom-right" />
-        <img src={decor1Left} alt="" className="menu-decor decor-top-left" />
-        
+        <img
+          src={decor1Right}
+          alt=""
+          className="menu-decor decor-bottom-right parallax-decor"
+          style={{ transform: `translateY(${getParallaxOffset('menu-creative-section', 0.15)}px)` }}
+        />
+        <img
+          src={decor1Left}
+          alt=""
+          className="menu-decor decor-top-left parallax-decor"
+          style={{ transform: `translateY(${getParallaxOffset('menu-creative-section', -0.2)}px)` }}
+        />
+
         <Player defaultImage={oneImg} scrollToSection={scrollToSection} />
 
         <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('creative-section')}>
@@ -472,9 +629,19 @@ function App() {
       {/* СЕКЦИЯ 5: МЕНЮ 2 — ВИДЕОМОНТАЖ */}
       <section className="snap-section hero-section" id="menu-video-section">
         <img src={allBg} alt="Фон" className="hero-background-img" />
-        <img src={decor2Left} alt="" className="menu-decor decor-top-left" />
-        <img src={decor2Right} alt="" className="menu-decor decor-bottom-right" />
-        
+        <img
+          src={decor2Left}
+          alt=""
+          className="menu-decor decor-top-left parallax-decor"
+          style={{ transform: `translateY(${getParallaxOffset('menu-video-section', -0.25)}px)` }}
+        />
+        <img
+          src={decor2Right}
+          alt=""
+          className="menu-decor decor-bottom-right parallax-decor"
+          style={{ transform: `translateY(${getParallaxOffset('menu-video-section', 0.2)}px)` }}
+        />
+
         <Player defaultImage={twoImg} scrollToSection={scrollToSection} />
 
         <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('video-section')}>
@@ -518,9 +685,19 @@ function App() {
       {/* СЕКЦИЯ 7: МЕНЮ 3 — ВЕКТОРНАЯ ГРАФИКА */}
       <section className="snap-section hero-section" id="menu-vector-section">
         <img src={allBg} alt="Фон" className="hero-background-img" />
-        <img src={decor3Right} alt="" className="menu-decor decor-bottom-right" />
-        <img src={decor3Left} alt="" className="menu-decor decor-top-left" />
-        
+        <img
+          src={decor3Right}
+          alt=""
+          className="menu-decor decor-bottom-right parallax-decor"
+          style={{ transform: `translateY(${getParallaxOffset('menu-vector-section', 0.18)}px)` }}
+        />
+        <img
+          src={decor3Left}
+          alt=""
+          className="menu-decor decor-top-left parallax-decor"
+          style={{ transform: `translateY(${getParallaxOffset('menu-vector-section', -0.22)}px)` }}
+        />
+
         <Player defaultImage={threeImg} scrollToSection={scrollToSection} />
 
         <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('vector-section')}>
@@ -562,9 +739,19 @@ function App() {
       {/* СЕКЦИЯ 9: МЕНЮ 4 — КОПИРАЙТИНГ */}
       <section className="snap-section hero-section" id="menu-copywrite-section">
         <img src={allBg} alt="Фон" className="hero-background-img" />
-        <img src={decor4Left} alt="" className="menu-decor decor-top-left" />
-        <img src={decor4Right} alt="" className="menu-decor decor-bottom-right" />
-        
+        <img
+          src={decor4Left}
+          alt=""
+          className="menu-decor decor-top-left parallax-decor"
+          style={{ transform: `translateY(${getParallaxOffset('menu-copywrite-section', -0.3)}px)` }}
+        />
+        <img
+          src={decor4Right}
+          alt=""
+          className="menu-decor decor-bottom-right parallax-decor"
+          style={{ transform: `translateY(${getParallaxOffset('menu-copywrite-section', 0.25)}px)` }}
+        />
+
         <Player defaultImage={fourImg} scrollToSection={scrollToSection} />
 
         <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('copywrite-section')}>
@@ -618,7 +805,10 @@ function App() {
           <button className="nav-arrow left-arrow" onClick={showPrevCreative}>‹</button>
           <div className="image-modal-wrapper" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setSelectedCreativeIndex(null)}>×</button>
-            <img src={creativeWorks[selectedCreativeIndex].img} alt={creativeWorks[selectedCreativeIndex].title} />
+            <ZoomableImage
+              src={creativeWorks[selectedCreativeIndex].img}
+              alt={creativeWorks[selectedCreativeIndex].title}
+            />
           </div>
           <button className="nav-arrow right-arrow" onClick={showNextCreative}>›</button>
         </div>
@@ -640,7 +830,10 @@ function App() {
           <button className="nav-arrow left-arrow" onClick={showPrevImage}>‹</button>
           <div className="image-modal-wrapper" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setSelectedImageIndex(null)}>×</button>
-            <img src={vectorWorks[selectedImageIndex].img} alt={vectorWorks[selectedImageIndex].title} />
+            <ZoomableImage
+              src={vectorWorks[selectedImageIndex].img}
+              alt={vectorWorks[selectedImageIndex].title}
+            />
           </div>
           <button className="nav-arrow right-arrow" onClick={showNextImage}>›</button>
         </div>
