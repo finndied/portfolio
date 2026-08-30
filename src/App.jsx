@@ -42,10 +42,14 @@ import video02 from './assets/video/video02.mp4';
 import video03 from './assets/video/video03.mp4';
 import video04 from './assets/video/video04.mp4';
 
-import imgS7 from './assets/creative/s7.png';
-import imgS7_2 from './assets/creative/s7_2.png';
-import imgPortal from './assets/creative/portal.jpg';
+import imgCarousel from './assets/creative/Карусель ОБЩЕЕ.png';
+import imgInfographics from './assets/creative/Карточка маркетплейс.png';
+import imgD3 from './assets/creative/D3 Siberian Wellness.png';
 import imgEmailKuper from './assets/creative/EmailKuper.png';
+import imgPlanner1 from './assets/creative/Ежедневник.png';
+import imgPlanner2 from './assets/creative/Ежедневник-2.png';
+import imgStories from './assets/creative/Сторис.png';
+import imgMoon from './assets/creative/Главный пост.png';
 
 // --- КОМПОНЕНТ КАРТИНКИ С ЗУМОМ ПО КЛИКУ ---
 const ZoomableImage = ({ src, alt, zoomScale = 3 }) => {
@@ -234,17 +238,22 @@ function App() {
   ];
 
   const creativeWorks = [
-    { id: 1, img: imgS7, title: 'Рекламный баннер S7' },
-    { id: 2, img: imgS7_2, title: 'Рекламный баннер S7' },
-    { id: 3, img: imgPortal, title: 'Рекламный баннер компании Портал' },
-    { id: 4, img: imgEmailKuper, title: 'Email-рассылка Купер' },
+    { id: 1, img: imgCarousel, title: 'Карусель в социальной сети' },
+    { id: 2, img: imgInfographics, title: 'Инфографика для маркетплейса' },
+    { id: 3, img: imgStories, title: 'История для социальной сети' },
+    { id: 4, img: imgD3, title: 'Пост в социальной сети для Siberian Wellness' },
+    { id: 5, img: imgMoon, title: 'Пост для социальной сети' },
+    { id: 6, img: imgEmailKuper, title: 'Email-рассылка Купер' },
     {
-      id: 5,
+      id: 7,
       img: imgAuraCover,
       file: pdfAura,
       isPdf: true,
-      title: 'Презентация Клубного дома Aura'
+      title: 'Презентация Клубного дома'
     },
+    { id: 8, img: imgPlanner1, title: 'Полиграфия для Авиасейлс' },
+    { id: 9, img: imgPlanner2, title: 'Полиграфия для Авиасейлс' },
+    
   ];
 
   const videoWorks = [
