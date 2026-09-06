@@ -5,22 +5,22 @@ import './CaseBlock.scss';
 // Данные кейса
 // ─────────────────────────────────────────────
 const caseImages = [
-    { id: 1, img: 'src/assets/Hotel ALTA/Полиграфия/Презентация визитки.png', layout: 'half' },
-    { id: 2, img: 'src/assets/Hotel ALTA/Полиграфия/Меню общее.png', layout: 'half' },
-    { id: 3, img: 'src/assets/Hotel ALTA/Полиграфия/Принт на фартуке.png', layout: 'half' },
-    { id: 4, img: 'src/assets/Hotel ALTA/Полиграфия/Табличка на дверь.png', layout: 'half' },
-    { id: 5, img: 'src/assets/Hotel ALTA/Полиграфия/Презентация навигации.png', layout: 'half' },
-    { id: 6, img: 'src/assets/Hotel ALTA/Полиграфия/Презентация подарочного набора.png', layout: 'half' },
-    { id: 7, img: 'src/assets/Hotel ALTA/Социальные сети/Баннер-вакансии.png', layout: 'half' },
-    { id: 8, img: 'src/assets/Hotel ALTA/Социальные сети/Рекламный баннер.png', layout: 'half' },
-    { id: 9, img: 'src/assets/Hotel ALTA/Социальные сети/Карусель-1.png', layout: 'half' },
-    { id: 10, img: 'src/assets/Hotel ALTA/Социальные сети/Карусель-2.png', layout: 'half' },
-    { id: 11, img: 'src/assets/Hotel ALTA/Социальные сети/Карусель-3.png', layout: 'half' },
-    { id: 12, img: 'src/assets/Hotel ALTA/Социальные сети/Карусель-4.png', layout: 'half' },
-    { id: 13, img: 'src/assets/Hotel ALTA/Социальные сети/Карусель-5.png', layout: 'half' },
-    { id: 14, img: 'src/assets/Hotel ALTA/Социальные сети/Карусель-6.png', layout: 'half' },
-    { id: 15, img: 'src/assets/Hotel ALTA/Социальные сети/Баннер.png', layout: 'half' },
-    { id: 16, img: 'src/assets/Hotel ALTA/Социальные сети/Баннер-адаптация.png', layout: 'half' },
+    { id: 1, img: 'src/assets/Hotel-alta/Print/prezentaciya-vizitki.png', layout: 'half' },
+    { id: 2, img: 'src/assets/Hotel-alta/Print/menyu-obshee.png', layout: 'half' },
+    { id: 3, img: 'src/assets/Hotel-alta/Print/print-na-fartuke.png', layout: 'half' },
+    { id: 4, img: 'src/assets/Hotel-alta/Print/tablichka-na-dver.png', layout: 'half' },
+    { id: 5, img: 'src/assets/Hotel-alta/Print/prezentaciya-navigacii.png', layout: 'half' },
+    { id: 6, img: 'src/assets/Hotel-alta/Print/prezentaciya-podarochnogo-nabora.png', layout: 'half' },
+    { id: 7, img: 'src/assets/Hotel-alta/Socials/banner-vakansii.png', layout: 'half' },
+    { id: 8, img: 'src/assets/Hotel-alta/Socials/reklamniy-banner.png', layout: 'half' },
+    { id: 9, img: 'src/assets/Hotel-alta/Socials/karusel-1.png', layout: 'half' },
+    { id: 10, img: 'src/assets/Hotel-alta/Socials/karusel-2.png', layout: 'half' },
+    { id: 11, img: 'src/assets/Hotel-alta/Socials/karusel-3.png', layout: 'half' },
+    { id: 12, img: 'src/assets/Hotel-alta/Socials/karusel-4.png', layout: 'half' },
+    { id: 13, img: 'src/assets/Hotel-alta/Socials/karusel-5.png', layout: 'half' },
+    { id: 14, img: 'src/assets/Hotel-alta/Socials/karusel-6.png', layout: 'half' },
+    { id: 15, img: 'src/assets/Hotel-alta/Socials/banner.png', layout: 'half' },
+    { id: 16, img: 'src/assets/Hotel-alta/Socials/banner-adaptaciya.png', layout: 'half' },
 
 ];
 
