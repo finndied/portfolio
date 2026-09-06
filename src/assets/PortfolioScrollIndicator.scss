@@ -1,0 +1,181 @@
+/* ═══════════════════════════════════════════
+   PortfolioScrollIndicator.scss
+   Стеклянная кнопка-индикатор скролла портфолио
+   ═══════════════════════════════════════════ */
+
+.psi-wrap {
+  position: fixed;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 998;       /* ниже модалок, выше секций */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;  /* сама обёртка не кликается */
+
+  /* Анимация появления */
+  animation: psiAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Стеклянная кнопка ── */
+.psi-card {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 22px;
+  padding: 14px 10px;
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  cursor: default;
+
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow:
+      0 10px 32px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  }
+}
+
+/* ── Вертикальный трек ── */
+.psi-track {
+  position: relative;
+  width: 4px;
+  /* высота = кол-во секций × 18px (максимум 200px) */
+  height: clamp(80px, calc(var(--psi-total, 10) * 18px), 200px);
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+}
+
+/* Активная заполненная часть трека */
+.psi-track-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 3px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 200, 255, 0.9),
+    rgba(255, 255, 255, 0.7)
+  );
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.6);
+  transition: height 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  min-height: 4px;
+}
+
+/* ── Точки-доты ── */
+.psi-dot {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+
+  &.active {
+    background: #ffffff;
+    border-color: #ffffff;
+    transform: translate(-50%, -50%) scale(1.4);
+    box-shadow:
+      0 0 8px rgba(255, 255, 255, 0.9),
+      0 0 16px rgba(0, 180, 255, 0.6);
+  }
+}
+
+/* ── Счётчик 01/10 ── */
+.psi-count {
+  font-size: 12px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.psi-count-total {
+  font-weight: 400;
+  opacity: 0.50;
+}
+
+/* ── Подпись текущей секции ── */
+.psi-label {
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  /* Плавная смена при изменении текста */
+  animation: psiLabelIn 0.3s ease forwards;
+}
+
+/* ═══════════════════
+   Анимации
+   ═══════════════════ */
+@keyframes psiAppear {
+  from { opacity: 0; transform: translateY(-50%) translateX(-16px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0);    }
+}
+
+@keyframes psiLabelIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ═════════════════════
+   Адаптация — мобильные
+   ═════════════════════ */
+@media (max-width: 768px) {
+  .psi-wrap {
+    left: 10px;
+  }
+
+  .psi-card {
+    padding: 10px 8px;
+    border-radius: 16px;
+  }
+
+  .psi-track {
+    height: clamp(60px, calc(var(--psi-total, 10) * 14px), 140px);
+  }
+
+  .psi-dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .psi-label { display: none; }
+}

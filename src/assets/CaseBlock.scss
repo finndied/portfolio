@@ -1,0 +1,491 @@
+/* ═══════════════════════════════════════════
+   CaseBlock.scss
+   ═══════════════════════════════════════════ */
+
+/* ── Стеклянный блок кейса ── */
+.case-glass-block {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 60px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 20px 45px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* ── ФИХ 3: Заголовок — текст по центру ── */
+.case-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;           /* вертикальное выравнивание по середине */
+  margin-bottom: 25px;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.case-title-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  text-align: center;
+}
+
+.case-subtitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #6d6d6d;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.case-description {
+  font-size: 15px;
+  color: rgba(109, 109, 109, 0.8);
+  line-height: 1.5;
+  margin: 0;
+  text-align: center;
+}
+
+.case-open-btn {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 12px 28px;
+  color: #6d6d6d;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 6px 16px rgba(0, 150, 255, 0.25);
+  }
+
+  &:active { transform: translateY(0); }
+}
+
+/* ── Превью-сетка 3×2 ── */
+.case-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  width: 100%;
+}
+
+.case-preview-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  aspect-ratio: 4 / 3;
+  background: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  grid-column: span 1 !important;  /* всегда 1 ячейка */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    img { transform: scale(1.05); }
+  }
+}
+
+/* ══════════════════════════════════════════
+   Полноэкранный просмотр кейса
+   ══════════════════════════════════════════ */
+.case-fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 10000;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 80px 0 60px;
+  animation: fadeInCase 0.3s ease forwards;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* Шапка */
+.case-fullscreen-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: rgba(17, 17, 17, 0.753);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+
+.case-fullscreen-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.case-fullscreen-close {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  z-index: 10002;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-50%) scale(1.1);
+  }
+}
+
+/* Контент */
+.case-fullscreen-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Элемент списка */
+.case-fullscreen-item {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: slideUpCase 0.5s ease forwards;
+  opacity: 0;
+  animation-fill-mode: forwards;
+  scroll-margin-top: 100px;
+  width: 50%;
+
+  &.full      { width: 100%; }
+  &.half      { width: 50%; }
+  &.half-left  { width: 65%; margin-right: auto; }
+  &.half-right { width: 65%; margin-left: auto; }
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) { animation-delay: #{$i * 0.08}s; }
+  }
+}
+
+/* ── ФИХ 2: картинка в списке кейса — подсвечивает зум-курсор ── */
+.case-fullscreen-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: zoom-in;
+  transition: opacity 0.2s ease;
+  border-radius: 16px;
+
+  &:hover { opacity: 0.92; }
+}
+
+/* ══════════════════════════════════════════
+   Индикатор скролла внутри кейса
+   — стеклянная кнопка-трек справа
+   ══════════════════════════════════════════ */
+.case-scroll-indicator {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10005;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  /* Стеклянная «кнопка» */
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  padding: 14px 10px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+  /* Анимация появления */
+  animation: fadeInCase 0.4s ease forwards;
+}
+
+/* Вертикальный трек */
+.case-scroll-track {
+  position: relative;
+  width: 4px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+  overflow: visible;
+}
+
+/* Ползунок */
+.case-scroll-thumb {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.8),
+    0 0 16px rgba(0, 180, 255, 0.5);
+  transition: top 0.15s ease;
+  /* Смещаем так чтобы центр шарика совпадал с прогрессом */
+  margin-top: -5px;
+}
+
+/* Счётчик «3 / 17» */
+.case-scroll-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  text-align: center;
+}
+
+.case-scroll-total {
+  font-weight: 400;
+  opacity: 0.55;
+}
+
+/* ══════════════════════════════════════════
+   ФИХ 2: Модальное окно картинки с зумом
+   ══════════════════════════════════════════ */
+.case-img-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Поверх полноэкранного кейса */
+  z-index: 10100;
+  animation: fadeInCase 0.22s ease forwards;
+  padding: 20px;
+  /* НЕ блокируем колёсико — оно не нужно здесь (картинка не скроллится) */
+}
+
+.case-img-modal-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Переполнение картинки при зуме выходит за рамки — это ок */
+  overflow: visible;
+  animation: scaleUpModal 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.case-img-modal-close {
+  position: fixed;     /* fixed чтобы не уходила за экран при зуме */
+  top: 20px;
+  right: 24px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10110;
+  transition: background 0.2s, transform 0.2s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+  }
+}
+
+.case-img-modal-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 8px 20px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  pointer-events: none;
+  z-index: 10110;
+  white-space: nowrap;
+  animation: fadeInCase 0.3s ease forwards;
+}
+
+/* ═══════════════════
+   Анимации
+   ═══════════════════ */
+@keyframes fadeInCase {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUpCase {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes scaleUpModal {
+  from { transform: scale(0.88); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* ═════════════════════════════
+   Блокировка скролла body
+   ═════════════════════════════ */
+body.case-open {
+  overflow: hidden !important;
+}
+
+/* ═════════════════════════════
+   Адаптация — планшеты
+   ═════════════════════════════ */
+@media (max-width: 992px) {
+  .case-glass-block { padding: 25px; }
+
+  .case-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .case-open-btn { align-self: center; }
+
+  .case-preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .case-fullscreen-content { padding: 0 20px; }
+
+  .case-fullscreen-item {
+    &.half,
+    &.half-left,
+    &.half-right { width: 100%; margin: 0; }
+  }
+}
+
+/* ═════════════════════════════
+   Адаптация — мобильные
+   ═════════════════════════════ */
+@media (max-width: 768px) {
+  .case-glass-block {
+    padding: 20px;
+    margin-bottom: 40px;
+  }
+
+  .case-subtitle    { font-size: 20px; }
+  .case-description { font-size: 13px; }
+
+  .case-open-btn {
+    padding: 10px 22px;
+    font-size: 14px;
+  }
+
+  .case-preview-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .case-fullscreen-overlay  { padding: 70px 0 40px; }
+  .case-fullscreen-header   { height: 70px; }
+  .case-fullscreen-title    { font-size: 20px; }
+
+  .case-fullscreen-content {
+    padding: 0 15px;
+    gap: 20px;
+  }
+
+  .case-fullscreen-close {
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
+
+  .case-fullscreen-item {
+    &.half,
+    &.half-left,
+    &.half-right { width: 100%; margin: 0; }
+  }
+}

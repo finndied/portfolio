@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.scss';
+import CaseBlock from './assets/CaseBlock';
 
 // Импорт изображений шапки и меню
 import headerImage from './assets/header-bg.webp';
@@ -253,7 +254,7 @@ function App() {
     },
     { id: 8, img: imgPlanner1, title: 'Полиграфия для Авиасейлс' },
     { id: 9, img: imgPlanner2, title: 'Полиграфия для Авиасейлс' },
-    
+
   ];
 
   const videoWorks = [
@@ -427,9 +428,9 @@ function App() {
   };
 
   const getActiveBubble = () => {
-    if (activeSectionIndex >= 8) return 4;
-    if (activeSectionIndex >= 6) return 3;
-    if (activeSectionIndex >= 4) return 2;
+    if (activeSectionIndex >= 9) return 4;
+    if (activeSectionIndex >= 7) return 3;
+    if (activeSectionIndex >= 5) return 2;
     if (activeSectionIndex >= 2) return 1;
     return 0;
   };
@@ -593,9 +594,30 @@ function App() {
         </div>
       </div>
 
-      {/* СЕКЦИЯ 4: 1. РЕКЛАМНЫЕ КРЕАТИВЫ */}
+      {/* СЕКЦИЯ 4а: КЕЙС ALTA HOTEL */}
       <section className="snap-section" id="creative-section">
         <div className="app-container">
+          <div className="section-title">1. РЕКЛАМНЫЕ КРЕАТИВЫ</div>
+          <CaseBlock />
+        </div>
+        <div
+          className="scroll-next-arrow hero-scroll-arrow"
+          onClick={() => scrollToSection('creative-works-section')}
+        >
+          ↓
+        </div>
+      </section>
+
+      {/* TICKER между секциями (опционально, можно убрать) */}
+      <div className="blue-ticker-banner">
+        <div className="ticker-track">
+          <span>РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ</span>
+        </div>
+      </div>
+
+      {/* СЕКЦИЯ 4б: ОСТАЛЬНЫЕ РЕКЛАМНЫЕ КРЕАТИВЫ */}
+      <section className="snap-section" id="creative-works-section">
+        <div className="app-container page-view">
           <div className="section-title">1. РЕКЛАМНЫЕ КРЕАТИВЫ</div>
           <div className="vector-grid">
             {creativeWorks.map((work, index) => (
@@ -624,7 +646,10 @@ function App() {
             ))}
           </div>
         </div>
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('menu-video-section')}>
+        <div
+          className="scroll-next-arrow hero-scroll-arrow"
+          onClick={() => scrollToSection('menu-video-section')}
+        >
           ↓
         </div>
       </section>
