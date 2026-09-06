@@ -1,31 +1,49 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './CaseBlock.scss';
 
+// 1. Импортируем все картинки (убедитесь, что папки названы строчными буквами)
+import imgVizitka from './hotel-alta/print/prezentaciya-vizitki.png';
+import imgMenu from './hotel-alta/print/menyu-obshee.png';
+import imgFartuk from './hotel-alta/print/print-na-fartuke.png';
+import imgDver from './hotel-alta/print/tablichka-na-dver.png';
+import imgNav from './hotel-alta/print/prezentaciya-navigacii.png';
+import imgNabor from './hotel-alta/print/prezentaciya-podarochnogo-nabora.png';
+
+import imgVakansii from './hotel-alta/socials/banner-vakansii.png';
+import imgReklama from './hotel-alta/socials/reklamniy-banner.png';
+import imgKarusel1 from './hotel-alta/socials/karusel-1.png';
+import imgKarusel2 from './hotel-alta/socials/karusel-2.png';
+import imgKarusel3 from './hotel-alta/socials/karusel-3.png';
+import imgKarusel4 from './hotel-alta/socials/karusel-4.png';
+import imgKarusel5 from './hotel-alta/socials/karusel-5.png';
+import imgKarusel6 from './hotel-alta/socials/karusel-6.png';
+import imgBanner from './hotel-alta/socials/banner.png';
+import imgBannerAdapt from './hotel-alta/socials/banner-adaptaciya.png';
+
 // ─────────────────────────────────────────────
-// Данные кейса
+// Данные кейса (теперь используем переменные импортов)
 // ─────────────────────────────────────────────
 const caseImages = [
-    { id: 1, img: '/assets/Hotel-alta/Print/prezentaciya-vizitki.png', layout: 'half' },
-    { id: 2, img: '/assets/Hotel-alta/Print/menyu-obshee.png', layout: 'half' },
-    { id: 3, img: '/assets/Hotel-alta/Print/print-na-fartuke.png', layout: 'half' },
-    { id: 4, img: '/assets/Hotel-alta/Print/tablichka-na-dver.png', layout: 'half' },
-    { id: 5, img: '/assets/Hotel-alta/Print/prezentaciya-navigacii.png', layout: 'half' },
-    { id: 6, img: '/assets/Hotel-alta/Print/prezentaciya-podarochnogo-nabora.png', layout: 'half' },
-    { id: 7, img: '/assets/Hotel-alta/Socials/banner-vakansii.png', layout: 'half' },
-    { id: 8, img: '/assets/Hotel-alta/Socials/reklamniy-banner.png', layout: 'half' },
-    { id: 9, img: '/assets/Hotel-alta/Socials/karusel-1.png', layout: 'half' },
-    { id: 10, img: '/assets/Hotel-alta/Socials/karusel-2.png', layout: 'half' },
-    { id: 11, img: '/assets/Hotel-alta/Socials/karusel-3.png', layout: 'half' },
-    { id: 12, img: '/assets/Hotel-alta/Socials/karusel-4.png', layout: 'half' },
-    { id: 13, img: '/assets/Hotel-alta/Socials/karusel-5.png', layout: 'half' },
-    { id: 14, img: '/assets/Hotel-alta/Socials/karusel-6.png', layout: 'half' },
-    { id: 15, img: '/assets/Hotel-alta/Socials/banner.png', layout: 'half' },
-    { id: 16, img: '/assets/Hotel-alta/Socials/banner-adaptaciya.png', layout: 'half' },
+    { id: 1, img: imgVizitka, layout: 'half' },
+    { id: 2, img: imgMenu, layout: 'half' },
+    { id: 3, img: imgFartuk, layout: 'half' },
+    { id: 4, img: imgDver, layout: 'half' },
+    { id: 5, img: imgNav, layout: 'half' },
+    { id: 6, img: imgNabor, layout: 'half' },
+    { id: 7, img: imgVakansii, layout: 'half' },
+    { id: 8, img: imgReklama, layout: 'half' },
+    { id: 9, img: imgKarusel1, layout: 'half' },
+    { id: 10, img: imgKarusel2, layout: 'half' },
+    { id: 11, img: imgKarusel3, layout: 'half' },
+    { id: 12, img: imgKarusel4, layout: 'half' },
+    { id: 13, img: imgKarusel5, layout: 'half' },
+    { id: 14, img: imgKarusel6, layout: 'half' },
+    { id: 15, img: imgBanner, layout: 'half' },
+    { id: 16, img: imgBannerAdapt, layout: 'half' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CaseImageModal — картинка кейса открывается как модальное окно
-// с зумом / перетаскиванием (точная копия поведения ZoomableImage из App.jsx)
 // ─────────────────────────────────────────────────────────────────────────────
 const CaseImageModal = ({ src, alt, onClose }) => {
     const [isZoomed, setIsZoomed] = useState(false);
@@ -36,7 +54,6 @@ const CaseImageModal = ({ src, alt, onClose }) => {
     const startPosRef = useRef({ x: 0, y: 0 });
     const hasDraggedRef = useRef(false);
 
-    // Escape — сначала сбрасываем зум, потом закрываем
     useEffect(() => {
         const onKey = (e) => {
             if (e.key !== 'Escape') return;
@@ -51,7 +68,6 @@ const CaseImageModal = ({ src, alt, onClose }) => {
         return () => window.removeEventListener('keydown', onKey);
     }, [isZoomed, onClose]);
 
-    // Зажатие ЛКМ — начало drag
     const handleMouseDown = (e) => {
         e.stopPropagation();
         if (e.button !== 0) return;
@@ -65,7 +81,6 @@ const CaseImageModal = ({ src, alt, onClose }) => {
         }
     };
 
-    // Drag move / up — глобальные обработчики
     useEffect(() => {
         const onMove = (e) => {
             if (!isDragging) return;
@@ -91,7 +106,6 @@ const CaseImageModal = ({ src, alt, onClose }) => {
         };
     }, [isDragging, translate]);
 
-    // Клик по картинке — зум / раззум
     const handleImgClick = (e) => {
         e.stopPropagation();
         if (hasDraggedRef.current) { hasDraggedRef.current = false; return; }
@@ -112,7 +126,6 @@ const CaseImageModal = ({ src, alt, onClose }) => {
     const cursor = isDragging ? 'grabbing' : isZoomed ? 'zoom-out' : 'zoom-in';
 
     return (
-        /* Клик по фону — закрыть (только если не зумировано) */
         <div
             className="case-img-modal-overlay"
             onClick={() => { if (!isZoomed) onClose(); }}
@@ -121,7 +134,6 @@ const CaseImageModal = ({ src, alt, onClose }) => {
                 className="case-img-modal-wrapper"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Кнопка закрытия */}
                 <button
                     className="case-img-modal-close"
                     onClick={onClose}
@@ -130,7 +142,6 @@ const CaseImageModal = ({ src, alt, onClose }) => {
                     ×
                 </button>
 
-                {/* Сама картинка */}
                 <img
                     src={src}
                     alt={alt}
@@ -170,13 +181,11 @@ const CaseImageModal = ({ src, alt, onClose }) => {
 const CaseBlock = () => {
     const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
     const [scrollToImageId, setScrollToImageId] = useState(null);
-    // Картинка, открытая как модалка внутри кейса
-    const [modalImage, setModalImage] = useState(null); // { src, alt }
+    const [modalImage, setModalImage] = useState(null); 
 
     const fullscreenOverlayRef = useRef(null);
     const fullscreenContentRef = useRef(null);
 
-    // ── Открытие полноэкранного кейса ──
     const handleOpenCase = useCallback((imageId = null) => {
         setIsFullscreenOpen(true);
         setScrollToImageId(imageId);
@@ -184,21 +193,17 @@ const CaseBlock = () => {
         document.body.classList.add('case-open');
     }, []);
 
-    // ── Закрытие полноэкранного кейса ──
     const closeFullscreen = useCallback(() => {
-        // Если открыта модалка картинки — закрываем только её
         if (modalImage) { setModalImage(null); return; }
         setIsFullscreenOpen(false);
         setScrollToImageId(null);
         document.body.classList.remove('case-open');
     }, [modalImage]);
 
-    // ── Клик по оверлею кейса — только если попали ровно в него ──
     const handleOverlayClick = useCallback((e) => {
         if (e.target === fullscreenOverlayRef.current) closeFullscreen();
     }, [closeFullscreen]);
 
-    // ── Escape ──
     useEffect(() => {
         const onKey = (e) => {
             if (e.key === 'Escape' && isFullscreenOpen && !modalImage) closeFullscreen();
@@ -207,7 +212,6 @@ const CaseBlock = () => {
         return () => window.removeEventListener('keydown', onKey);
     }, [isFullscreenOpen, modalImage, closeFullscreen]);
 
-    // ── Блокируем wheel-событие внутри оверлея (snap-scroll портфолио не перехватывает) ──
     useEffect(() => {
         const overlay = fullscreenOverlayRef.current;
         if (!overlay || !isFullscreenOpen) return;
@@ -216,7 +220,6 @@ const CaseBlock = () => {
         return () => overlay.removeEventListener('wheel', stopWheel, { capture: true });
     }, [isFullscreenOpen]);
 
-    // ── Прокрутка к выбранному изображению ──
     useEffect(() => {
         if (isFullscreenOpen && scrollToImageId !== null) {
             setTimeout(() => {
@@ -226,15 +229,11 @@ const CaseBlock = () => {
         }
     }, [isFullscreenOpen, scrollToImageId]);
 
-    // ── Cleanup ──
     useEffect(() => () => { document.body.classList.remove('case-open'); }, []);
 
     return (
         <>
-            {/* ── Стеклянный блок с превью ── */}
             <div className="case-glass-block">
-
-                {/* ФИХ 3: заголовок по центру */}
                 <div className="case-header">
                     <div className="case-title-section">
                         <h3 className="case-subtitle">Кейс ALTA HOTEL</h3>
@@ -247,7 +246,6 @@ const CaseBlock = () => {
                     </button>
                 </div>
 
-                {/* Превью-мозаика: первые 6 картинок */}
                 <div className="case-preview-grid">
                     {caseImages.slice(0, 9).map((item) => (
                         <div
@@ -261,14 +259,12 @@ const CaseBlock = () => {
                 </div>
             </div>
 
-            {/* ── Полноэкранный просмотр ── */}
             {isFullscreenOpen && (
                 <div
                     className="case-fullscreen-overlay"
                     ref={fullscreenOverlayRef}
                     onClick={handleOverlayClick}
                 >
-                    {/* Шапка */}
                     <div className="case-fullscreen-header">
                         <h2 className="case-fullscreen-title">Кейс ALTA HOTEL</h2>
                         <button
@@ -280,7 +276,6 @@ const CaseBlock = () => {
                         </button>
                     </div>
 
-                    {/* Список картинок */}
                     <div className="case-fullscreen-content" ref={fullscreenContentRef}>
                         {caseImages.map((item) => (
                             <div
@@ -288,7 +283,6 @@ const CaseBlock = () => {
                                 id={`case-image-${item.id}`}
                                 className={`case-fullscreen-item ${item.layout}`}
                             >
-                                {/* ФИХ 2: клик по картинке открывает модальное окно с зумом */}
                                 <img
                                     src={item.img}
                                     alt={`Case image ${item.id}`}
@@ -301,7 +295,6 @@ const CaseBlock = () => {
                 </div>
             )}
 
-            {/* ── Модальное окно картинки с зумом ── */}
             {modalImage && (
                 <CaseImageModal
                     src={modalImage.src}
