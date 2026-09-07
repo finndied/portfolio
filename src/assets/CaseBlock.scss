@@ -28,12 +28,11 @@
   }
 }
 
-/* ── ФИХ 3: Заголовок — текст по центру ── */
 .case-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;           /* вертикальное выравнивание по середине */
+  align-items: center;
   margin-bottom: 25px;
   gap: 20px;
   flex-shrink: 0;
@@ -94,7 +93,7 @@
   &:active { transform: translateY(0); }
 }
 
-/* ── Превью-сетка 3×2 ── */
+/* ── Превью-сетка 3×3 ── */
 .case-preview-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -109,7 +108,7 @@
   aspect-ratio: 4 / 3;
   background: rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  grid-column: span 1 !important;  /* всегда 1 ячейка */
+  grid-column: span 1 !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   img {
@@ -127,42 +126,44 @@
 }
 
 /* ══════════════════════════════════════════
-   Полноэкранный просмотр кейса
+   НОВЫЙ СТИЛЬ: Детальный просмотр с вертикальным скроллом
    ══════════════════════════════════════════ */
-.case-fullscreen-overlay {
+.case-detail-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.92);
-  z-index: 10000;
+  background: rgba(0, 0, 0, 0.990);
+  z-index: 11000;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 80px 0 60px;
   animation: fadeInCase 0.3s ease forwards;
-  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  
+  /* Скрытие скроллбара */
   scrollbar-width: none;
   -ms-overflow-style: none;
   &::-webkit-scrollbar { display: none; }
 }
 
-/* Шапка */
-.case-fullscreen-header {
+.case-detail-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 80px;
-  background: rgba(17, 17, 17, 0.753);
+  background: rgba(17, 17, 17, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10001;
+  z-index: 11001;
 }
 
-.case-fullscreen-title {
+.case-detail-header-title {
   font-size: 28px;
   font-weight: 600;
   color: #ffffff;
@@ -171,7 +172,7 @@
   text-align: center;
 }
 
-.case-fullscreen-close {
+.case-detail-close {
   position: absolute;
   right: 30px;
   top: 50%;
@@ -189,7 +190,7 @@
   line-height: 1;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
-  z-index: 10002;
+  z-index: 11002;
 
   &:hover {
     background: rgba(255, 255, 255, 0.28);
@@ -197,129 +198,130 @@
   }
 }
 
-/* Контент */
-.case-fullscreen-content {
-  max-width: 1400px;
+.case-detail-content {
+  padding-top: 30px;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  position: relative;
-  z-index: 1;
 }
 
-/* Элемент списка */
-.case-fullscreen-item {
+/* Секция (страница) кейса */
+.case-detail-section {
+  min-height: 100vh;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-self: center;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  animation: slideUpCase 0.5s ease forwards;
-  opacity: 0;
-  animation-fill-mode: forwards;
-  scroll-margin-top: 100px;
-  width: 50%;
+  padding: 80px 40px;
+  scroll-snap-align: start;
+  animation: fadeInCase 0.6s ease forwards;
+}
 
-  &.full      { width: 100%; }
-  &.half      { width: 50%; }
-  &.half-left  { width: 65%; margin-right: auto; }
-  &.half-right { width: 65%; margin-left: auto; }
+.case-detail-section-inner {
+  width: 100%;
+  margin-top: 60px;
+  max-width: 900px;
+  color: #ffffff;
+  text-align: left;
+}
 
-  @for $i from 1 through 20 {
-    &:nth-child(#{$i}) { animation-delay: #{$i * 0.08}s; }
+.case-detail-title {
+  font-size: 40px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.case-detail-subtitle {
+  font-size: 36px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 20px 0;
+  letter-spacing: 0.3px;
+}
+
+.case-detail-description {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+}
+
+.case-detail-year {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0 0 40px 0;
+}
+
+.case-detail-text {
+  margin-top: 30px;
+
+  p {
+    font-size: 18px;
+    line-height: 1.2;
+    color: rgba(255, 255, 255, 0.979);
+    margin-bottom: 18px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
-/* ── ФИХ 2: картинка в списке кейса — подсвечивает зум-курсор ── */
-.case-fullscreen-img {
+/* Контейнер для картинки */
+.case-detail-image-container {
+  margin-top: 40px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: zoom-in;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  }
+}
+
+.case-detail-image {
   width: 100%;
   height: auto;
   display: block;
-  cursor: zoom-in;
-  transition: opacity 0.2s ease;
   border-radius: 16px;
+  transition: opacity 0.2s ease;
 
-  &:hover { opacity: 0.92; }
+  &:hover {
+    opacity: 0.92;
+  }
+}
+
+/* Сетка для нескольких картинок */
+.case-detail-images-grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 40px;
+
+  &.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &.grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .case-detail-image-container {
+    margin-top: 0;
+  }
 }
 
 /* ══════════════════════════════════════════
-   Индикатор скролла внутри кейса
-   — стеклянная кнопка-трек справа
-   ══════════════════════════════════════════ */
-.case-scroll-indicator {
-  position: fixed;
-  right: 28px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10005;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-
-  /* Стеклянная «кнопка» */
-  background: rgba(255, 255, 255, 0.10);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 20px;
-  padding: 14px 10px;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
-
-  /* Анимация появления */
-  animation: fadeInCase 0.4s ease forwards;
-}
-
-/* Вертикальный трек */
-.case-scroll-track {
-  position: relative;
-  width: 4px;
-  height: 120px;
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 3px;
-  overflow: visible;
-}
-
-/* Ползунок */
-.case-scroll-thumb {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow:
-    0 0 8px rgba(255, 255, 255, 0.8),
-    0 0 16px rgba(0, 180, 255, 0.5);
-  transition: top 0.15s ease;
-  /* Смещаем так чтобы центр шарика совпадал с прогрессом */
-  margin-top: -5px;
-}
-
-/* Счётчик «3 / 17» */
-.case-scroll-count {
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.5px;
-  line-height: 1;
-  text-align: center;
-}
-
-.case-scroll-total {
-  font-weight: 400;
-  opacity: 0.55;
-}
-
-/* ══════════════════════════════════════════
-   ФИХ 2: Модальное окно картинки с зумом
+   Модальное окно картинки с зумом
    ══════════════════════════════════════════ */
 .case-img-modal-overlay {
   position: fixed;
@@ -327,17 +329,15 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.78);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Поверх полноэкранного кейса */
-  z-index: 10100;
+  z-index: 12000;
   animation: fadeInCase 0.22s ease forwards;
   padding: 20px;
-  /* НЕ блокируем колёсико — оно не нужно здесь (картинка не скроллится) */
 }
 
 .case-img-modal-wrapper {
@@ -345,13 +345,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Переполнение картинки при зуме выходит за рамки — это ок */
   overflow: visible;
   animation: scaleUpModal 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .case-img-modal-close {
-  position: fixed;     /* fixed чтобы не уходила за экран при зуме */
+  position: fixed;
   top: 20px;
   right: 24px;
   background: rgba(0, 0, 0, 0.55);
@@ -366,7 +365,7 @@
   font-size: 28px;
   line-height: 1;
   cursor: pointer;
-  z-index: 10110;
+  z-index: 12010;
   transition: background 0.2s, transform 0.2s;
 
   &:hover {
@@ -388,7 +387,7 @@
   font-size: 13px;
   letter-spacing: 0.4px;
   pointer-events: none;
-  z-index: 10110;
+  z-index: 12010;
   white-space: nowrap;
   animation: fadeInCase 0.3s ease forwards;
 }
@@ -399,11 +398,6 @@
 @keyframes fadeInCase {
   from { opacity: 0; }
   to   { opacity: 1; }
-}
-
-@keyframes slideUpCase {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0);    }
 }
 
 @keyframes scaleUpModal {
@@ -436,12 +430,23 @@ body.case-open {
     gap: 12px;
   }
 
-  .case-fullscreen-content { padding: 0 20px; }
+  .case-detail-section {
+    padding: 60px 30px;
+  }
 
-  .case-fullscreen-item {
-    &.half,
-    &.half-left,
-    &.half-right { width: 100%; margin: 0; }
+  .case-detail-title {
+    font-size: 40px;
+  }
+
+  .case-detail-subtitle {
+    font-size: 28px;
+  }
+
+  .case-detail-images-grid {
+    &.grid-2, &.grid-3 {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
   }
 }
 
@@ -467,25 +472,55 @@ body.case-open {
     gap: 10px;
   }
 
-  .case-fullscreen-overlay  { padding: 70px 0 40px; }
-  .case-fullscreen-header   { height: 70px; }
-  .case-fullscreen-title    { font-size: 20px; }
-
-  .case-fullscreen-content {
-    padding: 0 15px;
-    gap: 20px;
+  .case-detail-header {
+    height: 70px;
   }
 
-  .case-fullscreen-close {
+  .case-detail-header-title {
+    font-size: 20px;
+  }
+
+  .case-detail-close {
     right: 15px;
     width: 36px;
     height: 36px;
     font-size: 22px;
   }
 
-  .case-fullscreen-item {
-    &.half,
-    &.half-left,
-    &.half-right { width: 100%; margin: 0; }
+  .case-detail-section {
+    min-height: auto;
+    padding: 50px 20px;
+  }
+
+  .case-detail-content {
+    padding-top: 70px;
+  }
+
+  .case-detail-title {
+    font-size: 32px;
+  }
+
+  .case-detail-subtitle {
+    font-size: 24px;
+  }
+
+  .case-detail-description {
+    font-size: 16px;
+  }
+
+  .case-detail-text p {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .case-detail-images-grid {
+    &.grid-2, &.grid-3 {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+
+  .case-detail-image-container {
+    margin-top: 30px;
   }
 }

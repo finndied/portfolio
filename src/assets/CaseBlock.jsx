@@ -1,49 +1,34 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './CaseBlock.scss';
 
-// 1. Импортируем все картинки (убедитесь, что папки названы строчными буквами)
-import imgVizitka from './hotel-alta/print/prezentaciya-vizitki.png';
+// 1. Импортируем все картинки
+import imgHero from './hotel-alta/hotel-main.png';
+import imgMoodboard from './hotel-alta/moodboard.png';
+import imgVizitka from './hotel-alta/color.png';
 import imgMenu from './hotel-alta/print/menyu-obshee.png';
-import imgFartuk from './hotel-alta/print/print-na-fartuke.png';
-import imgDver from './hotel-alta/print/tablichka-na-dver.png';
-import imgNav from './hotel-alta/print/prezentaciya-navigacii.png';
+import imgGuestExperience1 from './hotel-alta/print/print-na-fartuke.png';
+import imgGuestExperience2 from './hotel-alta/print/prezentaciya-vizitki.png';
+import imgGuestExperience3 from './hotel-alta/print/tablichka-na-dver.png';
+import imgGuestExperience4 from './hotel-alta/print/prezentaciya-podarochnogo-nabora.png';
+import imgColorSystem from './hotel-alta/color.png';
+import imgLogo from './hotel-alta/logo.png';
 import imgNabor from './hotel-alta/print/prezentaciya-podarochnogo-nabora.png';
 
-import imgVakansii from './hotel-alta/socials/banner-vakansii.png';
-import imgReklama from './hotel-alta/socials/reklamniy-banner.png';
+import imgStories1 from './hotel-alta/socials/stories.png';
+import imgStories2 from './hotel-alta/socials/stories-2.png';
 import imgKarusel1 from './hotel-alta/socials/karusel-1.png';
 import imgKarusel2 from './hotel-alta/socials/karusel-2.png';
 import imgKarusel3 from './hotel-alta/socials/karusel-3.png';
 import imgKarusel4 from './hotel-alta/socials/karusel-4.png';
 import imgKarusel5 from './hotel-alta/socials/karusel-5.png';
 import imgKarusel6 from './hotel-alta/socials/karusel-6.png';
-import imgBanner from './hotel-alta/socials/banner.png';
-import imgBannerAdapt from './hotel-alta/socials/banner-adaptaciya.png';
-
-// ─────────────────────────────────────────────
-// Данные кейса (теперь используем переменные импортов)
-// ─────────────────────────────────────────────
-const caseImages = [
-    { id: 1, img: imgVizitka, layout: 'half' },
-    { id: 2, img: imgMenu, layout: 'half' },
-    { id: 3, img: imgFartuk, layout: 'half' },
-    { id: 4, img: imgDver, layout: 'half' },
-    { id: 5, img: imgNav, layout: 'half' },
-    { id: 6, img: imgNabor, layout: 'half' },
-    { id: 7, img: imgVakansii, layout: 'half' },
-    { id: 8, img: imgReklama, layout: 'half' },
-    { id: 9, img: imgKarusel1, layout: 'half' },
-    { id: 10, img: imgKarusel2, layout: 'half' },
-    { id: 11, img: imgKarusel3, layout: 'half' },
-    { id: 12, img: imgKarusel4, layout: 'half' },
-    { id: 13, img: imgKarusel5, layout: 'half' },
-    { id: 14, img: imgKarusel6, layout: 'half' },
-    { id: 15, img: imgBanner, layout: 'half' },
-    { id: 16, img: imgBannerAdapt, layout: 'half' },
-];
+import imgOffer1 from './hotel-alta/socials/reklamniy-banner.png';
+import imgOffer2 from './hotel-alta/socials/reklamniy-banner-2.png';
+import imgOffer3 from './hotel-alta/socials/reklamniy-banner-3.png';
+import imgBannerAdapt from './hotel-alta/hotel-main.png';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CaseImageModal — картинка кейса открывается как модальное окно
+// CaseImageModal — зум картинки
 // ─────────────────────────────────────────────────────────────────────────────
 const CaseImageModal = ({ src, alt, onClose }) => {
     const [isZoomed, setIsZoomed] = useState(false);
@@ -176,58 +161,265 @@ const CaseImageModal = ({ src, alt, onClose }) => {
 };
 
 // ─────────────────────────────────────────────
+// Структура секций детального кейса
+// ─────────────────────────────────────────────
+const caseSections = [
+    {
+        id: 'hero',
+        title: 'ALTA HOTEL',
+        description: 'Брендинг и визуальная коммуникация концептуального 5★ lifestyle-отеля в Новосибирске',
+        year: '2026 · Concept Project',
+        content: [
+            'ALTA — концептуальный современный отель в Новосибирске, объединяющий проживание, гастрономию, SPA и городские впечатления.',
+            'Задача проекта — разработать визуальную систему, которая одинаково органично работает в digital-среде, полиграфии, рекламе, сувенирной продукции и физическом пространстве отеля.'
+        ],
+        image: imgHero
+    },
+    {
+        id: 'context',
+        title: '01. КОНТЕКСТ',
+        content: [
+            'ALTA позиционируется как современный городской отель с эстетикой quiet luxury и локальным характером.',
+            'Отель объединяет:',
+            'Rooms · Restaurant · SPA · Bar · Events',
+            'Основная аудитория — гости города, деловые путешественники и люди, которые выбирают отель не только для проживания, но и как пространство для отдыха.',
+        ]
+    },
+    {
+        id: 'task',
+        title: '02. ЗАДАЧА',
+        content: [
+            'Требовалось создать цельную визуальную систему, которую можно масштабировать на все основные точки контакта с гостем.',
+            'Основные задачи',
+            '01. Создать узнаваемую айдентику.',
+            '02. Передать ощущение современной премиальности без избыточной декоративности.',
+            '03. Связать цифровые и физические носители одной системой.',
+            '04. Сделать визуальный язык достаточно гибким для разных подразделений отеля.'
+        ]
+    },
+    {
+        id: 'direction',
+        title: '03. НАПРАВЛЕНИЕ',
+        content: [
+            'Вместо прямолинейного визуального образа Сибири я выбрал более сдержанную интерпретацию.',
+            'Не горы, медведи, орнаменты, а: архитектура · тёмное дерево · камень · холодный городской пейзаж · спокойная роскошь.',
+            'Так бренд остаётся современным и премиальным, но сохраняет связь с местом.',
+            'Moodboard отражает визуальные референсы, которые легли в основу айдентики и коммуникации ALTA:'
+        ],
+        image: imgMoodboard
+    },
+    {
+        id: 'colors',
+        title: '03. ЦВЕТОВАЯ СИСТЕМА',
+        content: [
+            'Gold: #DFB763',
+            'Ink: #171817',
+            'Wine: #5C121C',
+            'Cream: #F1ECE4'
+        ],
+        image: imgColorSystem
+    },
+    {
+        id: 'logo',
+        title: '04. ЛОГОТИП',
+        content: [
+            'Основой айдентики стал геометрический знак, построенный вокруг стилизованной буквы A.',
+            'Знак состоит из нескольких геометрических элементов и может существовать самостоятельно без названия бренда.',
+            'Логотип не имеет одного фиксированного цвета и был спроектирован как адаптивный элемент айдентики, а не как знак, привязанный к одному цвету.',
+            'Он может менять цвет в зависимости от носителя: золото — премиальная физическая среда · белый — фотографии / dark background · графит — различные поверхности'
+        ],
+        image: imgLogo
+    },
+    {
+        id: 'advertising',
+        title: '05. ADVERTISING OFFER',
+        content: [
+            'Универсальная система рекламных офферов для продвижения разных направлений ALTA.',
+            'Для кампаний была разработана отдельная визуальная система, которая адаптируется под разные продукты бренда: номера, ресторан, SPA, специальные предложения и другие сервисы.',
+            'Основной принцип: эмоциональный визуал — короткое преимущество — конкретный оффер — действие.',
+            'Система позволяет сохранять единый стиль ALTA, меняя содержание и визуальный акцент в зависимости от продвигаемого направления.'
+        ],
+        images: [imgOffer1, imgOffer2, imgOffer3],
+        layout: 'grid-3'
+    },
+    {
+        id: 'social-carousel',
+        title: '06. SOCIAL MEDIA',
+        subtitle: 'Карусель',
+        images: [imgKarusel1, imgKarusel2, imgKarusel3, imgKarusel4, imgKarusel5, imgKarusel6],
+        layout: 'grid-3'
+    },
+    {
+        id: 'social-stories',
+        subtitle: 'Сторис',
+        images: [imgStories1, imgStories2],
+        layout: 'grid-2'
+    },
+    {
+        id: 'menu',
+        title: '07. RESTAURANT MENU',
+        content: [
+            'Меню ресторана.',
+            'В основе дизайна меню — текстура натурального дерева, глубокие бордово-коричневые оттенки, чёрные тарелки и выразительные фотографии блюд. Визуал сочетает брутальный и премиальный характер.'
+        ],
+        image: imgMenu
+    },
+    {
+        id: 'guest-experience',
+        title: '08. GUEST EXPERIENCE',
+        images: [imgGuestExperience1, imgGuestExperience2, imgGuestExperience3, imgGuestExperience4],
+        layout: 'grid-2'
+    },
+    {
+        id: 'reflection',
+        title: '09. REFLECTION',
+        content: [
+            'Главной задачей было не создать отдельный набор красивых носителей, а выстроить систему, способную сохранять характер бренда при масштабировании на разные форматы и среды.',
+            'В результате сформирована масштабируемая визуальная система, которая объединяет коммуникацию отеля, ресторана, SPA и гостевого опыта в единый бренд.'
+        ]
+    }
+];
+
+// ─────────────────────────────────────────────
 // Главный компонент CaseBlock
 // ─────────────────────────────────────────────
 const CaseBlock = () => {
-    const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
-    const [scrollToImageId, setScrollToImageId] = useState(null);
-    const [modalImage, setModalImage] = useState(null); 
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [scrollToSectionId, setScrollToSectionId] = useState(null);
+    const [modalImage, setModalImage] = useState(null);
 
-    const fullscreenOverlayRef = useRef(null);
-    const fullscreenContentRef = useRef(null);
+    const detailOverlayRef = useRef(null);
 
-    const handleOpenCase = useCallback((imageId = null) => {
-        setIsFullscreenOpen(true);
-        setScrollToImageId(imageId);
+    const handleOpenCase = useCallback((sectionId = null) => {
+        setIsDetailOpen(true);
+        setScrollToSectionId(sectionId);
         setModalImage(null);
         document.body.classList.add('case-open');
     }, []);
 
-    const closeFullscreen = useCallback(() => {
+    const closeDetail = useCallback(() => {
         if (modalImage) { setModalImage(null); return; }
-        setIsFullscreenOpen(false);
-        setScrollToImageId(null);
+        setIsDetailOpen(false);
+        setScrollToSectionId(null);
         document.body.classList.remove('case-open');
     }, [modalImage]);
 
     const handleOverlayClick = useCallback((e) => {
-        if (e.target === fullscreenOverlayRef.current) closeFullscreen();
-    }, [closeFullscreen]);
+        if (e.target === detailOverlayRef.current) closeDetail();
+    }, [closeDetail]);
 
     useEffect(() => {
         const onKey = (e) => {
-            if (e.key === 'Escape' && isFullscreenOpen && !modalImage) closeFullscreen();
+            if (e.key === 'Escape' && isDetailOpen && !modalImage) closeDetail();
         };
-        if (isFullscreenOpen) window.addEventListener('keydown', onKey);
+        if (isDetailOpen) window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
-    }, [isFullscreenOpen, modalImage, closeFullscreen]);
+    }, [isDetailOpen, modalImage, closeDetail]);
 
     useEffect(() => {
-        const overlay = fullscreenOverlayRef.current;
-        if (!overlay || !isFullscreenOpen) return;
-        const stopWheel = (e) => e.stopPropagation();
-        overlay.addEventListener('wheel', stopWheel, { capture: true });
-        return () => overlay.removeEventListener('wheel', stopWheel, { capture: true });
-    }, [isFullscreenOpen]);
-
-    useEffect(() => {
-        if (isFullscreenOpen && scrollToImageId !== null) {
+        if (isDetailOpen && scrollToSectionId !== null) {
             setTimeout(() => {
-                const el = document.getElementById(`case-image-${scrollToImageId}`);
+                const el = document.getElementById(`case-section-${scrollToSectionId}`);
                 if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 150);
+            }, 200);
         }
-    }, [isFullscreenOpen, scrollToImageId]);
+    }, [isDetailOpen, scrollToSectionId]);
+
+    useEffect(() => () => { document.body.classList.remove('case-open'); }, []);
+
+    // Превью-картинки для основного блока (связываем с секциями)
+    const previewImages = [
+        { id: 'hero', img: imgHero },
+        { id: 'logo', img: imgLogo },
+        { id: 'advertising', img: imgOffer1 },
+        { id: 'social-carousel', img: imgKarusel1 },
+        { id: 'social-carousel', img: imgKarusel2 },
+        { id: 'social-carousel', img: imgKarusel3 },
+        { id: 'menu', img: imgMenu },
+        { id: 'guest-experience', img: imgVizitka },
+        { id: 'guest-experience', img: imgNabor }
+    ];
+
+useEffect(() => {
+    if (!isDetailOpen) return;
+
+    const overlay = detailOverlayRef.current;
+    if (!overlay) return;
+
+    const handleWheel = (e) => {
+        e.stopPropagation();
+    };
+
+    // Перехватываем wheel события в фазе capture
+    overlay.addEventListener('wheel', handleWheel, { capture: true, passive: false });
+
+    return () => {
+        overlay.removeEventListener('wheel', handleWheel, { capture: true });
+    };
+}, [isDetailOpen]);
+
+    // Блокировка wheel событий на родительском контейнере и snap-скролл по секциям
+    useEffect(() => {
+        if (!isDetailOpen) return;
+
+        const overlay = detailOverlayRef.current;
+        if (!overlay) return;
+
+        let isScrolling = false;
+        let currentSectionIndex = 0;
+
+        const handleWheel = (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+
+            if (isScrolling) return;
+
+            const sections = overlay.querySelectorAll('.case-detail-section');
+            if (sections.length === 0) return;
+
+            // Определяем направление скролла
+            if (e.deltaY > 0) {
+                // Скролл вниз
+                if (currentSectionIndex < sections.length - 1) {
+                    currentSectionIndex++;
+                }
+            } else {
+                // Скролл вверх
+                if (currentSectionIndex > 0) {
+                    currentSectionIndex--;
+                }
+            }
+
+            isScrolling = true;
+
+            // Плавно скроллим к секции
+            sections[currentSectionIndex].scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+            // Блокируем повторный скролл на 800ms
+            setTimeout(() => {
+                isScrolling = false;
+            }, 800);
+        };
+
+        // Перехватываем wheel события в фазе capture
+        overlay.addEventListener('wheel', handleWheel, { capture: true, passive: false });
+
+        return () => {
+            overlay.removeEventListener('wheel', handleWheel, { capture: true });
+        };
+    }, [isDetailOpen]);
+
+    useEffect(() => {
+        if (isDetailOpen && scrollToSectionId !== null) {
+            setTimeout(() => {
+                const el = document.getElementById(`case-section-${scrollToSectionId}`);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+    }, [isDetailOpen, scrollToSectionId]);
 
     useEffect(() => () => { document.body.classList.remove('case-open'); }, []);
 
@@ -247,49 +439,86 @@ const CaseBlock = () => {
                 </div>
 
                 <div className="case-preview-grid">
-                    {caseImages.slice(0, 9).map((item) => (
+                    {previewImages.map((item, index) => (
                         <div
-                            key={item.id}
+                            key={index}
                             className="case-preview-item"
                             onClick={() => handleOpenCase(item.id)}
                         >
-                            <img src={item.img} alt={`Preview ${item.id}`} />
+                            <img src={item.img} alt={`Preview ${index + 1}`} />
                         </div>
                     ))}
                 </div>
             </div>
 
-            {isFullscreenOpen && (
+            {/* Детальный просмотр с вертикальным скроллом */}
+            {isDetailOpen && (
                 <div
-                    className="case-fullscreen-overlay"
-                    ref={fullscreenOverlayRef}
+                    className="case-detail-overlay"
+                    ref={detailOverlayRef}
                     onClick={handleOverlayClick}
                 >
-                    <div className="case-fullscreen-header">
-                        <h2 className="case-fullscreen-title">Кейс ALTA HOTEL</h2>
+                    <div className="case-detail-header">
+                        <h2 className="case-detail-header-title">Кейс ALTA HOTEL</h2>
                         <button
-                            className="case-fullscreen-close"
-                            onClick={closeFullscreen}
+                            className="case-detail-close"
+                            onClick={closeDetail}
                             title="Закрыть"
                         >
                             ×
                         </button>
                     </div>
 
-                    <div className="case-fullscreen-content" ref={fullscreenContentRef}>
-                        {caseImages.map((item) => (
-                            <div
-                                key={item.id}
-                                id={`case-image-${item.id}`}
-                                className={`case-fullscreen-item ${item.layout}`}
+                    <div className="case-detail-content">
+                        {caseSections.map((section) => (
+                            <section
+                                key={section.id}
+                                id={`case-section-${section.id}`}
+                                className="case-detail-section snap-section"
                             >
-                                <img
-                                    src={item.img}
-                                    alt={`Case image ${item.id}`}
-                                    className="case-fullscreen-img"
-                                    onClick={() => setModalImage({ src: item.img, alt: `Case image ${item.id}` })}
-                                />
-                            </div>
+                                <div className="case-detail-section-inner">
+                                    {section.title && <h1 className="case-detail-title">{section.title}</h1>}
+                                    {section.subtitle && <h2 className="case-detail-subtitle">{section.subtitle}</h2>}
+                                    {section.description && <p className="case-detail-description">{section.description}</p>}
+                                    {section.year && <p className="case-detail-year">{section.year}</p>}
+
+                                    {section.content && (
+                                        <div className="case-detail-text">
+                                            {section.content.map((line, i) => (
+                                                <p key={i}>{line}</p>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Одна картинка */}
+                                    {section.image && (
+                                        <div className="case-detail-image-container">
+                                            <img
+                                                src={section.image}
+                                                alt={section.title}
+                                                className="case-detail-image"
+                                                onClick={() => setModalImage({ src: section.image, alt: section.title })}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Несколько картинок */}
+                                    {section.images && (
+                                        <div className={`case-detail-images-grid ${section.layout || 'grid-auto'}`}>
+                                            {section.images.map((img, idx) => (
+                                                <div key={idx} className="case-detail-image-container">
+                                                    <img
+                                                        src={img}
+                                                        alt={`${section.title} ${idx + 1}`}
+                                                        className="case-detail-image"
+                                                        onClick={() => setModalImage({ src: img, alt: `${section.title} ${idx + 1}` })}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </section>
                         ))}
                     </div>
                 </div>
