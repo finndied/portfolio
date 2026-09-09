@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.scss';
 import CaseBlock from './assets/CaseBlock';
+import CaseBlockCandy from './assets/CaseBlockCandy';
 
 // Импорт изображений шапки и меню
 import headerImage from './assets/header-bg.webp';
@@ -62,7 +63,6 @@ const ZoomableImage = ({ src, alt, zoomScale = 3 }) => {
   const startPosRef = useRef({ x: 0, y: 0 });
   const hasDraggedRef = useRef(false);
 
-  // Сброс состояния при смене картинки
   useEffect(() => {
     setIsZoomed(false);
     setTransformOrigin('50% 50%');
@@ -70,149 +70,81 @@ const ZoomableImage = ({ src, alt, zoomScale = 3 }) => {
     setIsDragging(false);
   }, [src]);
 
-  // Зажатие ЛКМ
   const handleMouseDown = (e) => {
     e.stopPropagation();
-    if (e.button !== 0) return; // Реакция только на ЛКМ
-
+    if (e.button !== 0) return;
     if (isZoomed) {
       setIsDragging(true);
       hasDraggedRef.current = false;
-      startPosRef.current = {
-        x: e.clientX - translate.x,
-        y: e.clientY - translate.y,
-      };
+      startPosRef.current = { x: e.clientX - translate.x, y: e.clientY - translate.y };
     }
   };
 
-  // Перетаскивание
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!isDragging) return;
-
       const dx = Math.abs(e.clientX - (startPosRef.current.x + translate.x));
       const dy = Math.abs(e.clientY - (startPosRef.current.y + translate.y));
-
-      // Если сдвиг больше 5px — фиксируем движение (драг)
-      if (dx > 5 || dy > 5) {
-        hasDraggedRef.current = true;
-      }
-
-      if (hasDraggedRef.current) {
-        setTranslate({
-          x: e.clientX - startPosRef.current.x,
-          y: e.clientY - startPosRef.current.y,
-        });
-      }
+      if (dx > 5 || dy > 5) hasDraggedRef.current = true;
+      if (hasDraggedRef.current)
+        setTranslate({ x: e.clientX - startPosRef.current.x, y: e.clientY - startPosRef.current.y });
     };
-
-    const handleMouseUp = () => {
-      if (isDragging) {
-        setIsDragging(false);
-      }
-    };
-
+    const handleMouseUp = () => { if (isDragging) setIsDragging(false); };
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     }
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging, translate]);
 
-  // Обработка одиночного клика ЛКМ
   const handleClick = (e) => {
     e.stopPropagation();
-
-    // Если картинку перетаскивали — не сбрасываем зум
-    if (hasDraggedRef.current) {
-      hasDraggedRef.current = false;
-      return;
-    }
-
+    if (hasDraggedRef.current) { hasDraggedRef.current = false; return; }
     if (isZoomed) {
-      // Повторный клик: возвращаем в обычное состояние
       setIsZoomed(false);
       setTranslate({ x: 0, y: 0 });
     } else {
-      // Первый клик: приближаем в точку клика
       const rect = e.currentTarget.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-      setTransformOrigin(`${x}% ${y}%`);
+      setTransformOrigin(`${((e.clientX - rect.left) / rect.width) * 100}% ${((e.clientY - rect.top) / rect.height) * 100}%`);
       setTranslate({ x: 0, y: 0 });
       setIsZoomed(true);
     }
   };
 
-  const getCursor = () => {
-    if (!isZoomed) return 'zoom-in';
-    return isDragging ? 'grabbing' : 'zoom-out';
-  };
-
   return (
     <img
-      src={src}
-      alt={alt}
+      src={src} alt={alt}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       onDragStart={(e) => e.preventDefault()}
       style={{
-        cursor: getCursor(),
+        cursor: isDragging ? 'grabbing' : isZoomed ? 'zoom-out' : 'zoom-in',
         transform: isZoomed
-          ? `translate(${translate.x}px, ${translate.y}px) scale(${zoomScale})`
-          : 'translate(0px, 0px) scale(1)',
-        transformOrigin: transformOrigin,
-        transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
-        maxHeight: '85vh',
-        maxWidth: '90vw',
-        objectFit: 'contain',
-        userSelect: 'none',
+          ? `translate(${translate.x}px,${translate.y}px) scale(${zoomScale})`
+          : 'translate(0px,0px) scale(1)',
+        transformOrigin,
+        transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.25,1,0.5,1)',
+        maxHeight: '85vh', maxWidth: '90vw', objectFit: 'contain', userSelect: 'none',
       }}
     />
   );
 };
 
-// --- КОМПОНЕНТ ПЛЕЕРА НА ВЕРХНЕМ УРОВНЕ ---
+// --- КОМПОНЕНТ ПЛЕЕРА ---
 export const Player = ({ defaultImage = oneImg, scrollToSection }) => {
   const [currentImg, setCurrentImg] = useState(defaultImage);
-
-  useEffect(() => {
-    setCurrentImg(defaultImage);
-  }, [defaultImage]);
+  useEffect(() => { setCurrentImg(defaultImage); }, [defaultImage]);
 
   return (
     <div className="player-container">
       <img src={currentImg} className="player-img" alt="Player Menu" />
-
-      <div
-        className="player-click-zone zone-1"
-        onMouseEnter={() => setCurrentImg(oneImg)}
-        onClick={() => scrollToSection && scrollToSection('creative-section')}
-        title="Рекламные креативы"
-      />
-      <div
-        className="player-click-zone zone-2"
-        onMouseEnter={() => setCurrentImg(twoImg)}
-        onClick={() => scrollToSection && scrollToSection('video-section')}
-        title="Видеомонтаж"
-      />
-      <div
-        className="player-click-zone zone-3"
-        onMouseEnter={() => setCurrentImg(threeImg)}
-        onClick={() => scrollToSection && scrollToSection('vector-section')}
-        title="Векторная графика"
-      />
-      <div
-        className="player-click-zone zone-4"
-        onMouseEnter={() => setCurrentImg(fourImg)}
-        onClick={() => scrollToSection && scrollToSection('copywrite-section')}
-        title="Копирайтинг"
-      />
+      <div className="player-click-zone zone-1" onMouseEnter={() => setCurrentImg(oneImg)} onClick={() => scrollToSection && scrollToSection('creative-section')} title="Рекламные креативы" />
+      <div className="player-click-zone zone-2" onMouseEnter={() => setCurrentImg(twoImg)} onClick={() => scrollToSection && scrollToSection('video-section')} title="Видеомонтаж" />
+      <div className="player-click-zone zone-3" onMouseEnter={() => setCurrentImg(threeImg)} onClick={() => scrollToSection && scrollToSection('vector-section')} title="Векторная графика" />
+      <div className="player-click-zone zone-4" onMouseEnter={() => setCurrentImg(fourImg)} onClick={() => scrollToSection && scrollToSection('copywrite-section')} title="Копирайтинг" />
     </div>
   );
 };
@@ -245,23 +177,16 @@ function App() {
     { id: 4, img: imgD3, title: 'Пост в социальной сети для Siberian Wellness' },
     { id: 5, img: imgMoon, title: 'Пост для социальной сети' },
     { id: 6, img: imgEmailKuper, title: 'Email-рассылка Купер' },
-    {
-      id: 7,
-      img: imgAuraCover,
-      file: pdfAura,
-      isPdf: true,
-      title: 'Презентация Клубного дома'
-    },
+    { id: 7, img: imgAuraCover, file: pdfAura, isPdf: true, title: 'Презентация Клубного дома' },
     { id: 8, img: imgPlanner1, title: 'Полиграфия для Авиасейлс' },
     { id: 9, img: imgPlanner2, title: 'Полиграфия для Авиасейлс' },
-
   ];
 
   const videoWorks = [
     { id: 4, file: video04, title: 'Промо-ролик для Siberian Wellness' },
     { id: 3, file: video03, title: 'Видео для авиакомпании S7' },
     { id: 1, file: video01, title: 'Устройство электросамоката' },
-    { id: 2, file: video02, title: 'Видео для автоюриста' }
+    { id: 2, file: video02, title: 'Видео для автоюриста' },
   ];
 
   const vectorWorks = [
@@ -279,45 +204,18 @@ function App() {
   const copywritingWorks = [
     { id: 1, file: pdfHelp, title: 'Руководство Help.pdf' },
     { id: 2, file: pdfCategoryC, title: 'Руководство пользователя — Категория C' },
-    { id: 3, file: pdfCategoryD, title: 'Руководство пользователя — Категория D' }
+    { id: 3, file: pdfCategoryD, title: 'Руководство пользователя — Категория D' },
   ];
 
-  const showPrevVideo = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedVideoIndex((prev) => (prev === 0 ? videoWorks.length - 1 : prev - 1));
-  };
+  const showPrevVideo = (e) => { if (e) e.stopPropagation(); setSelectedVideoIndex((p) => (p === 0 ? videoWorks.length - 1 : p - 1)); };
+  const showNextVideo = (e) => { if (e) e.stopPropagation(); setSelectedVideoIndex((p) => (p === videoWorks.length - 1 ? 0 : p + 1)); };
+  const showPrevCreative = (e) => { if (e) e.stopPropagation(); setSelectedCreativeIndex((p) => (p === 0 ? creativeWorks.length - 1 : p - 1)); };
+  const showNextCreative = (e) => { if (e) e.stopPropagation(); setSelectedCreativeIndex((p) => (p === creativeWorks.length - 1 ? 0 : p + 1)); };
+  const showPrevImage = (e) => { if (e) e.stopPropagation(); setSelectedImageIndex((p) => (p === 0 ? vectorWorks.length - 1 : p - 1)); };
+  const showNextImage = (e) => { if (e) e.stopPropagation(); setSelectedImageIndex((p) => (p === vectorWorks.length - 1 ? 0 : p + 1)); };
 
-  const showNextVideo = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedVideoIndex((prev) => (prev === videoWorks.length - 1 ? 0 : prev + 1));
-  };
-
-  const showPrevCreative = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedCreativeIndex((prev) => (prev === 0 ? creativeWorks.length - 1 : prev - 1));
-  };
-
-  const showNextCreative = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedCreativeIndex((prev) => (prev === creativeWorks.length - 1 ? 0 : prev + 1));
-  };
-
-  const showPrevImage = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedImageIndex((prev) => (prev === 0 ? vectorWorks.length - 1 : prev - 1));
-  };
-
-  const showNextImage = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedImageIndex((prev) => (prev === vectorWorks.length - 1 ? 0 : prev + 1));
-  };
-
-  // Parallax эффект: отслеживание скролла
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
+    const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -347,31 +245,25 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedCreativeIndex, selectedVideoIndex, selectedImageIndex]);
 
-  // Отслеживание текущей секции для навигации
+  // Отслеживание текущей секции
   useEffect(() => {
     const sections = document.querySelectorAll('.snap-section');
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (isManualScrollingRef.current) return;
-
-        const visibleEntry = entries.find((entry) => entry.isIntersecting);
-
+        const visibleEntry = entries.find((e) => e.isIntersecting);
         if (visibleEntry) {
           const index = Array.from(sections).indexOf(visibleEntry.target);
-          if (index !== -1) {
-            currentSectionRef.current = index;
-            setActiveSectionIndex(index);
-          }
+          if (index !== -1) { currentSectionRef.current = index; setActiveSectionIndex(index); }
         }
       },
       { threshold: 0.6 }
     );
-
     sections.forEach((sec) => observer.observe(sec));
     return () => observer.disconnect();
   }, []);
 
+  // Snap-скролл колесиком
   useEffect(() => {
     let isScrolling = false;
     const sections = document.querySelectorAll('.snap-section');
@@ -379,27 +271,11 @@ function App() {
     const handleWheel = (e) => {
       e.preventDefault();
       if (isScrolling) return;
-
-      if (e.deltaY > 0) {
-        if (currentSectionRef.current < sections.length - 1) {
-          currentSectionRef.current++;
-        }
-      } else {
-        if (currentSectionRef.current > 0) {
-          currentSectionRef.current--;
-        }
-      }
-
+      if (e.deltaY > 0) { if (currentSectionRef.current < sections.length - 1) currentSectionRef.current++; }
+      else { if (currentSectionRef.current > 0) currentSectionRef.current--; }
       isScrolling = true;
-
-      sections[currentSectionRef.current].scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-
-      setTimeout(() => {
-        isScrolling = false;
-      }, 800);
+      sections[currentSectionRef.current].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => { isScrolling = false; }, 800);
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
@@ -408,29 +284,22 @@ function App() {
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
-    if (element) {
-      const sections = Array.from(document.querySelectorAll('.snap-section'));
-      const index = sections.indexOf(element);
-
-      if (index !== -1) {
-        isManualScrollingRef.current = true;
-
-        currentSectionRef.current = index;
-        setActiveSectionIndex(index);
-
-        element.scrollIntoView({ behavior: 'smooth' });
-
-        setTimeout(() => {
-          isManualScrollingRef.current = false;
-        }, 850);
-      }
+    if (!element) return;
+    const sections = Array.from(document.querySelectorAll('.snap-section'));
+    const index = sections.indexOf(element);
+    if (index !== -1) {
+      isManualScrollingRef.current = true;
+      currentSectionRef.current = index;
+      setActiveSectionIndex(index);
+      element.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => { isManualScrollingRef.current = false; }, 850);
     }
   };
 
   const getActiveBubble = () => {
-    if (activeSectionIndex >= 9) return 4;
-    if (activeSectionIndex >= 7) return 3;
-    if (activeSectionIndex >= 5) return 2;
+    if (activeSectionIndex >= 10) return 4;
+    if (activeSectionIndex >= 8) return 3;
+    if (activeSectionIndex >= 6) return 2;
     if (activeSectionIndex >= 2) return 1;
     return 0;
   };
@@ -438,13 +307,8 @@ function App() {
   const getParallaxOffset = (sectionId, speed = 0.3) => {
     const section = document.getElementById(sectionId);
     if (!section) return 0;
-
     const rect = section.getBoundingClientRect();
-    const sectionCenter = rect.top + rect.height / 2;
-    const viewportCenter = window.innerHeight / 2;
-    const offset = (viewportCenter - sectionCenter) * speed;
-
-    return offset;
+    return (window.innerHeight / 2 - (rect.top + rect.height / 2)) * speed;
   };
 
   const activeBubbleNum = getActiveBubble();
@@ -453,7 +317,7 @@ function App() {
   return (
     <div className="snap-container" ref={containerRef}>
 
-      {/* ПЛАВАЮЩАЯ НАВИГАЦИЯ FRUTIGER AERO */}
+      {/* ПЛАВАЮЩАЯ НАВИГАЦИЯ */}
       <div className={`frutiger-bubble-nav ${showSidebar ? 'visible' : ''}`}>
         {portfolioNavItems.map((item) => (
           <button
@@ -470,54 +334,33 @@ function App() {
       {/* СЕКЦИЯ 1: HERO */}
       <section className="snap-section hero-section" id="hero-section">
         <header className="header-nav-aero">
-          <button className="aero-glass-btn" onClick={() => scrollToSection('about-section')}>
-            ОБО МНЕ
-          </button>
-          <button className="aero-glass-btn" onClick={() => scrollToSection('menu-creative-section')}>
-            РАБОТЫ
-          </button>
-          <button className="aero-glass-btn" onClick={() => setIsModalOpen(true)}>
-            СВЯЗАТЬСЯ
-          </button>
+          <button className="aero-glass-btn" onClick={() => scrollToSection('about-section')}>ОБО МНЕ</button>
+          <button className="aero-glass-btn" onClick={() => scrollToSection('menu-creative-section')}>РАБОТЫ</button>
+          <button className="aero-glass-btn" onClick={() => setIsModalOpen(true)}>СВЯЗАТЬСЯ</button>
         </header>
-
         <img src={headerImage} alt="Portfolio Hero" className="hero-background-img" />
-
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('about-section')}>
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('about-section')}>↓</div>
       </section>
 
       {/* СЕКЦИЯ 2: ОБО МНЕ */}
       <section className="snap-section hero-section" id="about-section">
         <img src={aboutBg} alt="About Background" className="hero-background-img" />
-
         <div className="about-page-wrapper">
           <div className="about-card-modern">
             <h1 className="about-title">Обо мне</h1>
-
             <div className="about-row">
-              <p className="about-text">
-                Привет! Меня зовут Илья, мне 23 года. Обладаю сильным техническим бэкграундом и опытом создания контента.
-              </p>
+              <p className="about-text">Привет! Меня зовут Илья, мне 23 года. Обладаю сильным техническим бэкграундом и опытом создания контента.</p>
             </div>
-
             <div className="about-divider" />
-
             <div className="about-row column">
               <span className="about-tag">[ ЧТО Я УМЕЮ ]</span>
-              <p className="about-text">
-                Я умею самостоятельно закрывать весь цикл производства: от структурирования сложных текстов до полной отрисовки графики (Photoshop, Illustrator) и создания видеоконтента (After Effects, CapCut и др.).
-              </p>
+              <p className="about-text">Я умею самостоятельно закрывать весь цикл производства: от структурирования сложных текстов до полной отрисовки графики (Photoshop, Illustrator) и создания видеоконтента (After Effects, CapCut и др.).</p>
             </div>
-
             <div className="about-divider" />
-
             <div className="about-row column">
               <span className="about-tag">[ ОПЫТ И НАВЫКИ ]</span>
               <div className="about-text">
                 <p>Имею реальный опыт работы в продуктовых ИТ-командах:</p>
-
                 <div className="about-grid-list">
                   <div className="about-col">
                     <div className="about-col-title">ДИЗАЙН И ВИДЕО</div>
@@ -528,7 +371,6 @@ function App() {
                       <li>Иллюстративный материал для учебных конспектов.</li>
                     </ul>
                   </div>
-
                   <div className="about-col">
                     <div className="about-col-title">ТЕКСТЫ И ВЕРСТКА</div>
                     <ul className="about-list">
@@ -539,24 +381,14 @@ function App() {
                     </ul>
                   </div>
                 </div>
-
-                <p style={{ marginTop: '12px' }}>
-                  Быстро разбираюсь в логике сложных продуктов, использую ИИ для автоматизации рутины и создаю контент по бренд-гайдам.
-                </p>
+                <p style={{ marginTop: '12px' }}>Быстро разбираюсь в логике сложных продуктов, использую ИИ для автоматизации рутины и создаю контент по бренд-гайдам.</p>
               </div>
             </div>
-
             <div className="about-divider" />
-
-            <div className="about-tools">
-              ADOBE PHOTOSHOP - ADOBE ILLUSTRATOR - AFTER EFFECTS - FIGMA - HTML - GITLAB - AI
-            </div>
+            <div className="about-tools">ADOBE PHOTOSHOP - ADOBE ILLUSTRATOR - AFTER EFFECTS - FIGMA - HTML - GITLAB - AI</div>
           </div>
         </div>
-
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('menu-creative-section')}>
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('menu-creative-section')}>↓</div>
       </section>
 
       <div className="blue-ticker-banner">
@@ -568,24 +400,10 @@ function App() {
       {/* СЕКЦИЯ 3: МЕНЮ 1 — КРЕАТИВЫ */}
       <section className="snap-section hero-section" id="menu-creative-section">
         <img src={allBg} alt="Фон" className="hero-background-img" />
-        <img
-          src={decor1Right}
-          alt=""
-          className="menu-decor decor-bottom-right parallax-decor"
-          style={{ transform: `translateY(${getParallaxOffset('menu-creative-section', 0.15)}px)` }}
-        />
-        <img
-          src={decor1Left}
-          alt=""
-          className="menu-decor decor-top-left parallax-decor"
-          style={{ transform: `translateY(${getParallaxOffset('menu-creative-section', -0.2)}px)` }}
-        />
-
+        <img src={decor1Right} alt="" className="menu-decor decor-bottom-right parallax-decor" style={{ transform: `translateY(${getParallaxOffset('menu-creative-section', 0.15)}px)` }} />
+        <img src={decor1Left} alt="" className="menu-decor decor-top-left parallax-decor" style={{ transform: `translateY(${getParallaxOffset('menu-creative-section', -0.2)}px)` }} />
         <Player defaultImage={oneImg} scrollToSection={scrollToSection} />
-
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('creative-section')}>
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('creative-section')}>↓</div>
       </section>
 
       <div className="blue-ticker-banner">
@@ -594,28 +412,36 @@ function App() {
         </div>
       </div>
 
-      {/* СЕКЦИЯ 4а: КЕЙС ALTA HOTEL */}
+      {/* СЕКЦИЯ 4а: КЕЙС MONSTER ENERGY CANDY */}
       <section className="snap-section" id="creative-section">
         <div className="app-container">
           <div className="section-title">1. РЕКЛАМНЫЕ КРЕАТИВЫ</div>
-          <CaseBlock />
+          <CaseBlockCandy />
         </div>
-        <div
-          className="scroll-next-arrow hero-scroll-arrow"
-          onClick={() => scrollToSection('creative-works-section')}
-        >
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('alta-section')}>↓</div>
       </section>
 
-      {/* TICKER между секциями (опционально, можно убрать) */}
       <div className="blue-ticker-banner">
         <div className="ticker-track">
           <span>РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ</span>
         </div>
       </div>
 
-      {/* СЕКЦИЯ 4б: ОСТАЛЬНЫЕ РЕКЛАМНЫЕ КРЕАТИВЫ */}
+      {/* СЕКЦИЯ 4б: КЕЙС ALTA HOTEL */}
+      <section className="snap-section" id="alta-section">
+        <div className="app-container">
+          <CaseBlock />
+        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('creative-works-section')}>↓</div>
+      </section>
+
+      <div className="blue-ticker-banner">
+        <div className="ticker-track">
+          <span>РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ • РЕКЛАМНЫЕ КРЕАТИВЫ</span>
+        </div>
+      </div>
+
+      {/* СЕКЦИЯ 4в: ОСТАЛЬНЫЕ РЕКЛАМНЫЕ КРЕАТИВЫ */}
       <section className="snap-section" id="creative-works-section">
         <div className="app-container page-view">
           <div className="section-title">1. РЕКЛАМНЫЕ КРЕАТИВЫ</div>
@@ -624,34 +450,17 @@ function App() {
               <div
                 key={work.id}
                 className="vector-card aero-card doc-card"
-                onClick={() => {
-                  if (work.isPdf) {
-                    setSelectedPdf(work.file);
-                  } else {
-                    setSelectedCreativeIndex(index);
-                  }
-                }}
+                onClick={() => { if (work.isPdf) setSelectedPdf(work.file); else setSelectedCreativeIndex(index); }}
               >
                 <div className="vector-img-wrapper">
-                  <img
-                    src={work.img}
-                    alt={work.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
-                  />
+                  <img src={work.img} alt={work.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} />
                 </div>
-                <span className="doc-card-title" style={{ marginTop: '12px' }}>
-                  {work.title}
-                </span>
+                <span className="doc-card-title" style={{ marginTop: '12px' }}>{work.title}</span>
               </div>
             ))}
           </div>
         </div>
-        <div
-          className="scroll-next-arrow hero-scroll-arrow"
-          onClick={() => scrollToSection('menu-video-section')}
-        >
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('menu-video-section')}>↓</div>
       </section>
 
       <div className="blue-ticker-banner">
@@ -663,24 +472,10 @@ function App() {
       {/* СЕКЦИЯ 5: МЕНЮ 2 — ВИДЕОМОНТАЖ */}
       <section className="snap-section hero-section" id="menu-video-section">
         <img src={allBg} alt="Фон" className="hero-background-img" />
-        <img
-          src={decor2Left}
-          alt=""
-          className="menu-decor decor-top-left parallax-decor"
-          style={{ transform: `translateY(${getParallaxOffset('menu-video-section', -0.25)}px)` }}
-        />
-        <img
-          src={decor2Right}
-          alt=""
-          className="menu-decor decor-bottom-right parallax-decor"
-          style={{ transform: `translateY(${getParallaxOffset('menu-video-section', 0.2)}px)` }}
-        />
-
+        <img src={decor2Left} alt="" className="menu-decor decor-top-left parallax-decor" style={{ transform: `translateY(${getParallaxOffset('menu-video-section', -0.25)}px)` }} />
+        <img src={decor2Right} alt="" className="menu-decor decor-bottom-right parallax-decor" style={{ transform: `translateY(${getParallaxOffset('menu-video-section', 0.2)}px)` }} />
         <Player defaultImage={twoImg} scrollToSection={scrollToSection} />
-
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('video-section')}>
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('video-section')}>↓</div>
       </section>
 
       <div className="blue-ticker-banner">
@@ -705,9 +500,7 @@ function App() {
             ))}
           </div>
         </div>
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('menu-vector-section')}>
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('menu-vector-section')}>↓</div>
       </section>
 
       <div className="blue-ticker-banner">
@@ -719,24 +512,10 @@ function App() {
       {/* СЕКЦИЯ 7: МЕНЮ 3 — ВЕКТОРНАЯ ГРАФИКА */}
       <section className="snap-section hero-section" id="menu-vector-section">
         <img src={allBg} alt="Фон" className="hero-background-img" />
-        <img
-          src={decor3Right}
-          alt=""
-          className="menu-decor decor-bottom-right parallax-decor"
-          style={{ transform: `translateY(${getParallaxOffset('menu-vector-section', 0.18)}px)` }}
-        />
-        <img
-          src={decor3Left}
-          alt=""
-          className="menu-decor decor-top-left parallax-decor"
-          style={{ transform: `translateY(${getParallaxOffset('menu-vector-section', -0.22)}px)` }}
-        />
-
+        <img src={decor3Right} alt="" className="menu-decor decor-bottom-right parallax-decor" style={{ transform: `translateY(${getParallaxOffset('menu-vector-section', 0.18)}px)` }} />
+        <img src={decor3Left} alt="" className="menu-decor decor-top-left parallax-decor" style={{ transform: `translateY(${getParallaxOffset('menu-vector-section', -0.22)}px)` }} />
         <Player defaultImage={threeImg} scrollToSection={scrollToSection} />
-
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('vector-section')}>
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('vector-section')}>↓</div>
       </section>
 
       <div className="blue-ticker-banner">
@@ -752,16 +531,12 @@ function App() {
           <div className="vector-grid">
             {vectorWorks.map((work, index) => (
               <div key={work.id} className="vector-card aero-card" onClick={() => setSelectedImageIndex(index)}>
-                <div className="vector-img-wrapper">
-                  <img src={work.img} alt={work.title} />
-                </div>
+                <div className="vector-img-wrapper"><img src={work.img} alt={work.title} /></div>
               </div>
             ))}
           </div>
         </div>
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('menu-copywrite-section')}>
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('menu-copywrite-section')}>↓</div>
       </section>
 
       <div className="blue-ticker-banner">
@@ -773,24 +548,10 @@ function App() {
       {/* СЕКЦИЯ 9: МЕНЮ 4 — КОПИРАЙТИНГ */}
       <section className="snap-section hero-section" id="menu-copywrite-section">
         <img src={allBg} alt="Фон" className="hero-background-img" />
-        <img
-          src={decor4Left}
-          alt=""
-          className="menu-decor decor-top-left parallax-decor"
-          style={{ transform: `translateY(${getParallaxOffset('menu-copywrite-section', -0.3)}px)` }}
-        />
-        <img
-          src={decor4Right}
-          alt=""
-          className="menu-decor decor-bottom-right parallax-decor"
-          style={{ transform: `translateY(${getParallaxOffset('menu-copywrite-section', 0.25)}px)` }}
-        />
-
+        <img src={decor4Left} alt="" className="menu-decor decor-top-left parallax-decor" style={{ transform: `translateY(${getParallaxOffset('menu-copywrite-section', -0.3)}px)` }} />
+        <img src={decor4Right} alt="" className="menu-decor decor-bottom-right parallax-decor" style={{ transform: `translateY(${getParallaxOffset('menu-copywrite-section', 0.25)}px)` }} />
         <Player defaultImage={fourImg} scrollToSection={scrollToSection} />
-
-        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('copywrite-section')}>
-          ↓
-        </div>
+        <div className="scroll-next-arrow hero-scroll-arrow" onClick={() => scrollToSection('copywrite-section')}>↓</div>
       </section>
 
       <div className="blue-ticker-banner">
@@ -806,9 +567,7 @@ function App() {
           <div className="vector-grid">
             {copywritingWorks.map((work) => (
               <div key={work.id} className="vector-card doc-card aero-card" onClick={() => setSelectedPdf(work.file)}>
-                <div className="vector-img-wrapper">
-                  <img src={docIcon} alt="PDF Document" />
-                </div>
+                <div className="vector-img-wrapper"><img src={docIcon} alt="PDF Document" /></div>
                 <span className="doc-card-title" style={{ marginTop: '15px' }}>{work.title}</span>
               </div>
             ))}
@@ -823,12 +582,8 @@ function App() {
             <button className="modal-close-btn" onClick={() => setIsModalOpen(false)}>×</button>
             <div className="section-titles">СВЯЗАТЬСЯ</div>
             <div className="contact-buttons-container">
-              <a href="https://t.me/qwexkmmk" target="_blank" rel="noreferrer" className="circle-contact-btn tg-btn">
-                <span>TG</span>
-              </a>
-              <a href="https://hh.ru/resume/0a43e06dff0bc693600039ed1f674b584c344c" target="_blank" rel="noreferrer" className="circle-contact-btn hh-btn">
-                <span>HH</span>
-              </a>
+              <a href="https://t.me/qwexkmmk" target="_blank" rel="noreferrer" className="circle-contact-btn tg-btn"><span>TG</span></a>
+              <a href="https://hh.ru/resume/0a43e06dff0bc693600039ed1f674b584c344c" target="_blank" rel="noreferrer" className="circle-contact-btn hh-btn"><span>HH</span></a>
             </div>
           </div>
         </div>
@@ -839,10 +594,7 @@ function App() {
           <button className="nav-arrow left-arrow" onClick={showPrevCreative}>‹</button>
           <div className="image-modal-wrapper" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setSelectedCreativeIndex(null)}>×</button>
-            <ZoomableImage
-              src={creativeWorks[selectedCreativeIndex].img}
-              alt={creativeWorks[selectedCreativeIndex].title}
-            />
+            <ZoomableImage src={creativeWorks[selectedCreativeIndex].img} alt={creativeWorks[selectedCreativeIndex].title} />
           </div>
           <button className="nav-arrow right-arrow" onClick={showNextCreative}>›</button>
         </div>
@@ -853,7 +605,7 @@ function App() {
           <button className="nav-arrow left-arrow" onClick={showPrevVideo}>‹</button>
           <div className="image-modal-wrapper" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setSelectedVideoIndex(null)}>×</button>
-            <video key={videoWorks[selectedVideoIndex].file} src={videoWorks[selectedVideoIndex].file} controls autoPlay style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: '12px', boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)' }} />
+            <video key={videoWorks[selectedVideoIndex].file} src={videoWorks[selectedVideoIndex].file} controls autoPlay style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: '12px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }} />
           </div>
           <button className="nav-arrow right-arrow" onClick={showNextVideo}>›</button>
         </div>
@@ -864,10 +616,7 @@ function App() {
           <button className="nav-arrow left-arrow" onClick={showPrevImage}>‹</button>
           <div className="image-modal-wrapper" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" onClick={() => setSelectedImageIndex(null)}>×</button>
-            <ZoomableImage
-              src={vectorWorks[selectedImageIndex].img}
-              alt={vectorWorks[selectedImageIndex].title}
-            />
+            <ZoomableImage src={vectorWorks[selectedImageIndex].img} alt={vectorWorks[selectedImageIndex].title} />
           </div>
           <button className="nav-arrow right-arrow" onClick={showNextImage}>›</button>
         </div>
@@ -881,7 +630,6 @@ function App() {
           </div>
         </div>
       )}
-
     </div>
   );
 }
